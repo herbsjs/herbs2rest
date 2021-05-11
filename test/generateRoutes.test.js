@@ -1,118 +1,114 @@
-const assert = require("assert");
-const { Router } = require("express");
+const assert = require('assert')
+const request = require('supertest')
 
-const generateRoutes = require("../src/generateRoutes");
+const { Router } = require('express')
 
-describe("Herbs2Rest - Generate Routes", () => {
-  it("Should resolve and create a get all route", async () => {
+const generateRoutes = require('../src/generateRoutes')
+
+describe('Herbs2Rest - Generate Routes', () => {
+  it('Should resolve and create a get all route', async () => {
     // Given
-    const routes = new Router();
+    const routes = new Router()
 
     const controllerList = [
       {
-        name: "lists",
+        name: 'lists',
         getAll: {},
       },
-    ];
+    ]
 
     // When
-    await generateRoutes(controllerList, routes);
+    await generateRoutes(controllerList, routes)
 
     // Then
-    const { stack } = routes;
-    const firstRoute = stack[0].route;
-
-    assert.deepStrictEqual(firstRoute.path, "/lists");
-    assert.deepStrictEqual(firstRoute.stack[0].method, "get");
+    request(routes)
+      .get('/lists')
+      .expect(200)
   }),
-    it("Should resolve and create a get by id route", async () => {
-      // Given
-      const routes = new Router();
 
-      const controllerList = [
-        {
-          name: "lists",
-          getById: {},
-        },
-      ];
+  it('Should resolve and create a get by id route', async () => {
+    // Given
+    const routes = new Router()
 
-      // When
-      await generateRoutes(controllerList, routes);
+    const controllerList = [
+      {
+        name: 'lists',
+        getById: {},
+      },
+    ]
 
-      // Then
-      const { stack } = routes;
-      const firstRoute = stack[0].route;
+    // When
+    await generateRoutes(controllerList, routes)
 
-      assert.deepStrictEqual(firstRoute.path, "/lists/:id");
-      assert.deepStrictEqual(firstRoute.stack[0].method, "get");
-    }),
-    it("Should resolve and create a post route", async () => {
-      // Given
-      const routes = new Router();
+    // Then
+    request(routes)
+      .get('/lists/1')
+      .expect(200)
+  }),
 
-      const controllerList = [
-        {
-          name: "lists",
-          post: {},
-        },
-      ];
+  it('Should resolve and create a post route', async () => {
+    // Given
+    const routes = new Router()
 
-      // When
-      await generateRoutes(controllerList, routes);
+    const controllerList = [
+      {
+        name: 'lists',
+        post: {},
+      },
+    ]
 
-      // Then
-      const { stack } = routes;
-      const firstRoute = stack[0].route;
+    // When
+    await generateRoutes(controllerList, routes)
 
-      assert.deepStrictEqual(firstRoute.path, "/lists");
-      assert.deepStrictEqual(firstRoute.stack[0].method, "post");
-    }),
-    it("Should resolve and create a put route", async () => {
-      // Given
-      const routes = new Router();
+    // Then
+    request(routes)
+      .post('/lists')
+      .expect(200)
+  }),
 
-      const controllerList = [
-        {
-          name: "lists",
-          put: {},
-        },
-      ];
+  it('Should resolve and create a put route', async () => {
+    // Given
+    const routes = new Router()
 
-      // When
-      await generateRoutes(controllerList, routes);
+    const controllerList = [
+      {
+        name: 'lists',
+        put: {},
+      },
+    ]
 
-      // Then
-      const { stack } = routes;
-      const firstRoute = stack[0].route;
+    // When
+    await generateRoutes(controllerList, routes)
 
-      assert.deepStrictEqual(firstRoute.path, "/lists/:id");
-      assert.deepStrictEqual(firstRoute.stack[0].method, "put");
-    }),
-    it("Should resolve and create a delete route", async () => {
-      // Given
-      const routes = new Router();
+    // Then
+    request(routes)
+      .put('/lists/1')
+      .expect(200)
+  }),
 
-      const controllerList = [
-        {
-          name: "lists",
-          delete: {},
-        },
-      ];
+  it('Should resolve and create a delete route', async () => {
+    // Given
+    const routes = new Router()
 
-      // When
-      await generateRoutes(controllerList, routes);
+    const controllerList = [
+      {
+        name: 'lists',
+        delete: {},
+      },
+    ]
 
-      // Then
-      const { stack } = routes;
-      const firstRoute = stack[0].route;
+    // When
+    await generateRoutes(controllerList, routes)
 
-      assert.deepStrictEqual(firstRoute.path, "/lists/:id");
-      assert.deepStrictEqual(firstRoute.stack[0].method, "delete");
-    });
+    // Then
+    request(routes)
+      .del('/lists/1')
+      .expect(200)
+  })
 
-  it("Should throw a JavascriptError if controllersList is null", async () => {
-    const routes = new Router();
+  it('Should throw a JavascriptError if controllersList is null', async () => {
+    const routes = new Router()
 
-    assert.rejects(async () => await generateRoutes(null, routes));
-  });
-});
+    assert.rejects(async () => await generateRoutes(null, routes))
+  })
+})

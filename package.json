@@ -13,7 +13,10 @@
   "devDependencies": {
     "express": "^4.17.1",
     "mocha": "^8.3.2",
-    "gotu": "^1.0.18"
+    "nyc": "^15.1.0",
+    "supertest": "^6.1.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "gotu": "^1.0.18"
+  }
 }

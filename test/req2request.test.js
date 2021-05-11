@@ -1,7 +1,8 @@
-const assert = require("assert");
-const req2request = require("../src/helpers/req2request");
+const assert = require('assert')
 
-describe("Helper - req2request", () => {
+const req2request = require('../src/helpers/req2request')
+
+describe('Helper - req2request', () => {
   const usecase = () => ({
     authorize: () => false,
 
@@ -11,22 +12,22 @@ describe("Helper - req2request", () => {
     },
 
     run: () => true,
-  });
+  })
 
-  it("Should return the request accordingly to the usecase request schema", () => {
+  it('Should return the request accordingly to the usecase request schema', () => {
     const req = {
-      name: "test",
-      number: "1",
-      otherUnused: "",
-    };
+      name: 'test',
+      number: '1',
+      otherUnused: '',
+    }
 
     const expected = {
-      name: "test",
+      name: 'test',
       number: 1,
-    };
+    }
 
-    const result = req2request(req, usecase());
+    const result = req2request(req, usecase())
 
-    assert.deepStrictEqual(expected, result);
-  });
-});
+    assert.deepStrictEqual(expected, result)
+  })
+})
