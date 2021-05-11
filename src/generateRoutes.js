@@ -1,7 +1,7 @@
 const defaultController = require('./defaultController')
 
-const generateRoutes = (controllersList, app) => {
-  controllersList.forEach(controller => {
+const generateRoutes = (controllerList, app) => {
+  controllerList.forEach(controller => {
     if (controller.getAll) {
       app.get(`/${controller.name}`, async (req, res, next) => {
         const request = req.query
