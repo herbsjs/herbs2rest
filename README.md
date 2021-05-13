@@ -54,7 +54,7 @@ All usecases must implement the authorize method and receive a user to authentic
 Example:
 
 ```javascript
-const { Ok, Err usecase } = require('buchu')
+const { Ok, Err, usecase } = require('buchu')
 
 const testUseCase = (injection) =>
   usecase('Test UseCase', {
