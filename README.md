@@ -47,6 +47,26 @@ generateRoutes(controllerList, routes)
 app.use(routes)
 ```
 
+#### Authorization
+
+All usecases must implement the authorize method and receive a user to authenticate.
+
+Example:
+
+```javascript
+const { Ok, Err usecase } = require('buchu')
+
+const testUseCase = (injection) =>
+  usecase('Test UseCase', {
+    authorize: (user) => {
+      if (user === 'admin')
+        return Ok()
+      else
+        return Err('Invalid user')
+    }
+  })
+```
+
 ---
 
 ### License
