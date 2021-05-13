@@ -1,4 +1,4 @@
-![Node.js CI](https://github.com/herbsjs/herbs2rest/workflows/Node.js%20CI/badge.svg?branch=master)[![codecov](https://codecov.io/gh/herbsjs/herbs2rest/branch/master/graph/badge.svg)](https://codecov.io/gh/herbsjs/herbs2rest)
+![Node.js CI](https://github.com/herbsjs/herbs2rest/actions/workflows/on_push.yml/badge.svg?branch=main)[![codecov](https://codecov.io/gh/herbsjs/herbs2rest/branch/main/graph/badge.svg)](https://codecov.io/gh/herbsjs/herbs2rest)
 
 # herbs2rest
 Create a REST API based on herbs entities ([gotu](https://github.com/herbsjs/gotu)) and usecases ([buchu](https://github.com/herbsjs/buchu)).
