@@ -69,6 +69,16 @@ const testUseCase = (injection) =>
 
 ---
 
+#### Example
+
+Additionally you can view a simple demo application of this library in [todolist-on-herbs](https://github.com/herbsjs/todolist-on-herbs).
+
+## How to contribute
+
+If you would like to help contribute to this repository, please see [CONTRIBUTING](https://github.com/herbsjs/herbs2rest/blob/master/.github/CONTRIBUTING.md)
+
+---
+
 ### License
 
-- [MIT License](https://github.com/herbsjs/herbs2gql/blob/master/LICENSE)
+- [MIT License](https://github.com/herbsjs/herbs2rest/blob/master/LICENSE)
