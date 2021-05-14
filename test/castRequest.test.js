@@ -24,6 +24,12 @@ describe('Helper - castRequest', () => {
     assert.deepStrictEqual(Array.isArray(result), true)
   })
 
+  it('Should return an array when type is Number Array', () => {
+    const result = castRequest([1, 2], [Number])
+
+    assert.deepStrictEqual(Array.isArray(result), true)
+  })
+
   it('Should return a string when type is String', () => {
     const result = castRequest(1, String)
 

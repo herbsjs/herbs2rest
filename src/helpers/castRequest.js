@@ -4,6 +4,9 @@ const castRequest = (value, type) => {
   if (value === undefined) 
     return undefined
 
+  if (Array.isArray(type))
+    return value.map(item => castRequest(item, type[0]))
+
   if (type === Array) 
     return value
 
