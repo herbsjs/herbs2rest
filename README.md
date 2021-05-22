@@ -49,7 +49,7 @@ const { generateRoutes } = require('herbs2rest')
 const app = express()
 const routes = new express.Router()
 
-generateRoutes(controllerList, routes)
+generateRoutes(controllerList, routes, true)  // true = console info endpoints
 
 app.use(routes)
 ```
