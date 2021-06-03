@@ -22,20 +22,20 @@ The method needs a list of controllers like the example below:
 const controllerList = [
   {
     name: 'lists',
-    getAll: { useCase: require('../usecases/getLists'), customController: require('../customController') },
-    getById: { useCase: require('../usecases/getLists'), idParameter: 'listId' },
-    post: { useCase: require('../usecases/createList') },
-    put: { useCase: require('../usecases/updateList') },
-    delete: { useCase: require('../usecases/deleteList') }
+    getAll: { usecase: require('../usecases/getLists'), controller: require('../controller') },
+    getById: { usecase: require('../usecases/getLists'), id: 'listId' },
+    post: { usecase: require('../usecases/createList') },
+    put: { usecase: require('../usecases/updateList') },
+    delete: { usecase: require('../usecases/deleteList') }
   }
 ]
 ```
 
-The name field is the name of the route.
+The `name` field is the name of the route.
 
-The idParameter field is the param of the route.
+The `id` field is the param of the route.
 
-The customController field is to replace the default controller.
+The `controller` field is to replace the default controller.
 
 The other fields refer to http methods using usecases (GetAll, GetById, Post, Put and Delete).
 
@@ -44,7 +44,7 @@ The other fields refer to http methods using usecases (GetAll, GetById, Post, Pu
 To create a custom controller, it is necessary to follow this pattern.
 
 ```javascript
-const customController = async (usecase, req, user, res, next) => {
+const controller = async (usecase, req, user, res, next) => {
   // Implementation
 }
 ```

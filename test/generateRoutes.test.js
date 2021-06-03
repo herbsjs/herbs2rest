@@ -22,7 +22,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
-        getAll: { useCase: usecaseTest }
+        getAll: { usecase: usecaseTest }
       },
     ]
 
@@ -43,7 +43,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
-        getById: { useCase: usecaseTest }
+        getById: { usecase: usecaseTest }
       },
     ]
 
@@ -64,7 +64,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
-        post: { useCase: usecaseTest }
+        post: { usecase: usecaseTest }
       },
     ]
 
@@ -85,7 +85,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
-        put: { useCase: usecaseTest }
+        put: { usecase: usecaseTest }
       },
     ]
 
@@ -106,7 +106,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
-        delete: { useCase: usecaseTest }
+        delete: { usecase: usecaseTest }
       },
     ]
 

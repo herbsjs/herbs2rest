@@ -1,69 +1,69 @@
 const defaultController = require('./defaultController')
 
-const generateRoutes = (controllerList, app, endpointInfo = false) => {
+const generateRoutes = (routes, app, endpointInfo = false) => {
   // eslint-disable-next-line no-console
   function info(msg) { if (endpointInfo) console.info(msg) }
 
   info(`\n🌐 REST Endpoints`)
 
-  controllerList.forEach(controller => {
-    info(`\n${controller.name} endpoints`)
+  routes.forEach(route => {
+    info(`\n${route.name} endpoints`)
 
-    if (controller.getAll) {
-      const endpoint = `/${controller.name}`
-      info(`    GET ${endpoint} -> ${controller.getAll.useCase().description}`)
+    if (route.getAll) {
+      const endpoint = `/${route.name}`
+      info(`    GET ${endpoint} -> ${route.getAll.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query }
-        const usecase = controller.getAll.useCase
-        const currentController = controller.getAll.customController || defaultController
+        const usecase = route.getAll.usecase
+        const currentController = route.getAll.controller || defaultController
 
         await currentController(usecase, request, req.user, res, next)
       })
     }
 
-    if (controller.getById) {
-      const endpoint = `/${controller.name}/:${controller.getById.idParameter || 'id'}`
-      info(`    GET ${endpoint} -> ${controller.getById.useCase().description}`)
+    if (route.getById) {
+      const endpoint = `/${route.name}/:${route.getById.id || 'id'}`
+      info(`    GET ${endpoint} -> ${route.getById.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
-        const usecase = controller.getById.useCase
-        const currentController = controller.getById.customController || defaultController
+        const usecase = route.getById.usecase
+        const currentController = route.getById.controller || defaultController
 
         await currentController(usecase, request, req.user, res, next)
       })
     }
 
-    if (controller.post) {
-      const endpoint = `/${controller.name}`
-      info(`    POST ${endpoint} -> ${controller.post.useCase().description}`)
+    if (route.post) {
+      const endpoint = `/${route.name}`
+      info(`    POST ${endpoint} -> ${route.post.usecase().description}`)
       app.post(endpoint, async (req, res, next) => {
         const request = { body: req.body }
-        const usecase = controller.post.useCase
-        const currentController = controller.post.customController || defaultController
+        const usecase = route.post.usecase
+        const currentController = route.post.controller || defaultController
 
         await currentController(usecase, request, req.user, res, next)
       })
     }
 
-    if (controller.put) {
-      const endpoint = `/${controller.name}/:${controller.put.idParameter || 'id'}`
-      info(`    PUT ${endpoint} -> ${controller.put.useCase().description}`)
+    if (route.put) {
+      const endpoint = `/${route.name}/:${route.put.id || 'id'}`
+      info(`    PUT ${endpoint} -> ${route.put.usecase().description}`)
       app.put(endpoint, async (req, res, next) => {
         const request = { body: req.body, params: req.params }
-        const usecase = controller.put.useCase
-        const currentController = controller.put.customController || defaultController
+        const usecase = route.put.usecase
+        const currentController = route.put.controller || defaultController
 
         await currentController(usecase, request, req.user, res, next)
       })
     }
 
-    if (controller.delete) {
-      const endpoint = `/${controller.name}/:${controller.delete.idParameter || 'id'}`
-      info(`    DELETE ${endpoint} -> ${controller.delete.useCase().description}`)
+    if (route.delete) {
+      const endpoint = `/${route.name}/:${route.delete.id || 'id'}`
+      info(`    DELETE ${endpoint} -> ${route.delete.usecase().description}`)
       app.delete(endpoint, async (req, res, next) => {
         const request = { params: req.params }
-        const usecase = controller.delete.useCase
-        const currentController = controller.delete.customController || defaultController
+        const usecase = route.delete.usecase
+        const currentController = route.delete.controller || defaultController
 
         await currentController(usecase, request, req.user, res, next)
       })

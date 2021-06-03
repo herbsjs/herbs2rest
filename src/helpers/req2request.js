@@ -1,8 +1,8 @@
 const castRequest = require('./castRequest')
 const castRequestParams = require('./castRequestParams')
 
-const req2request = (req, useCase) => {
-  const schema = useCase.requestSchema
+const req2request = (req, usecase) => {
+  const schema = usecase.requestSchema
   const params = {}
   const fields = Object.keys(schema)
 
