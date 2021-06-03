@@ -9,6 +9,7 @@ describe('Helper - req2request', () => {
     requestSchema: {
       name: String,
       number: Number,
+      ids: [Number]
     },
 
     run: () => true,
@@ -16,14 +17,41 @@ describe('Helper - req2request', () => {
 
   it('Should return the request accordingly to the usecase request schema', () => {
     const req = {
+      body: {
+        name: 'test',
+        otherUnused: ''
+      },
+      params: {
+        number: '1'
+      }
+    }
+
+    const expected = {
       name: 'test',
-      number: '1',
-      otherUnused: '',
+      number: 1
+    }
+
+    const result = req2request(req, usecase())
+
+    assert.deepStrictEqual(expected, result)
+  }),
+
+  it('Should return the request accordingly to the usecase request schema with parameters', () => {
+    const req = {
+      body: {
+        name: 'test',
+        number: '1',
+        otherUnused: ''
+      },
+      params: {
+        ids: '1'
+      }
     }
 
     const expected = {
       name: 'test',
       number: 1,
+      ids: [1]
     }
 
     const result = req2request(req, usecase())

@@ -11,51 +11,61 @@ const generateRoutes = (controllerList, app, endpointInfo = false) => {
 
     if (controller.getAll) {
       const endpoint = `/${controller.name}`
-      info(`    GET ${endpoint} -> ${controller.getAll().description}`)
+      info(`    GET ${endpoint} -> ${controller.getAll.useCase().description}`)
       app.get(endpoint, async (req, res, next) => {
-        const request = req.query
-        const usecase = controller.getAll
-        await defaultController(usecase, request, req.user, res, next)
+        const request = { query: req.query }
+        const usecase = controller.getAll.useCase
+        const currentController = controller.getAll.customController || defaultController
+
+        await currentController(usecase, request, req.user, res, next)
       })
     }
 
     if (controller.getById) {
-      const endpoint = `/${controller.name}/:${controller.idParameter || 'id'}`
-      info(`    GET ${endpoint} -> ${controller.getById().description}`)
+      const endpoint = `/${controller.name}/:${controller.getById.idParameter || 'id'}`
+      info(`    GET ${endpoint} -> ${controller.getById.useCase().description}`)
       app.get(endpoint, async (req, res, next) => {
-        const request = Object.assign({}, req.query, req.params)
-        const usecase = controller.getById
-        await defaultController(usecase, request, req.user, res, next)
+        const request = { query: req.query, params: req.params }
+        const usecase = controller.getById.useCase
+        const currentController = controller.getById.customController || defaultController
+
+        await currentController(usecase, request, req.user, res, next)
       })
     }
 
     if (controller.post) {
       const endpoint = `/${controller.name}`
-      info(`    POST ${endpoint} -> ${controller.post().description}`)
+      info(`    POST ${endpoint} -> ${controller.post.useCase().description}`)
       app.post(endpoint, async (req, res, next) => {
-        const request = req.body
-        const usecase = controller.post
-        await defaultController(usecase, request, req.user, res, next)
+        const request = { body: req.body }
+        const usecase = controller.post.useCase
+        const currentController = controller.post.customController || defaultController
+
+        await currentController(usecase, request, req.user, res, next)
       })
     }
 
     if (controller.put) {
-      const endpoint = `/${controller.name}/:${controller.idParameter || 'id'}`
-      info(`    PUT ${endpoint} -> ${controller.put().description}`)
+      const endpoint = `/${controller.name}/:${controller.put.idParameter || 'id'}`
+      info(`    PUT ${endpoint} -> ${controller.put.useCase().description}`)
       app.put(endpoint, async (req, res, next) => {
-        const request = Object.assign({}, req.body, req.params)
-        const usecase = controller.put
-        await defaultController(usecase, request, req.user, res, next)
+        const request = { body: req.body, params: req.params }
+        const usecase = controller.put.useCase
+        const currentController = controller.put.customController || defaultController
+
+        await currentController(usecase, request, req.user, res, next)
       })
     }
 
     if (controller.delete) {
-      const endpoint = `/${controller.name}/:${controller.idParameter || 'id'}`
-      info(`    DELETE ${endpoint} -> ${controller.delete().description}`)
+      const endpoint = `/${controller.name}/:${controller.delete.idParameter || 'id'}`
+      info(`    DELETE ${endpoint} -> ${controller.delete.useCase().description}`)
       app.delete(endpoint, async (req, res, next) => {
-        const request = req.params
-        const usecase = controller.delete
-        await defaultController(usecase, request, req.user, res, next)
+        const request = { params: req.params }
+        const usecase = controller.delete.useCase
+        const currentController = controller.delete.customController || defaultController
+
+        await currentController(usecase, request, req.user, res, next)
       })
     }
   })
