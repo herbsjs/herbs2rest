@@ -22,21 +22,40 @@ The method needs a list of controllers like the example below:
 const controllerList = [
   {
     name: 'lists',
-    idParameter: 'listId',
-    getAll: require('../usecases/getLists'),
-    getById: require('../usecases/getLists'),
-    post: require('../usecases/createList'),
-    put: require('../usecases/updateList'),
-    delete: require('../usecases/deleteList')
+    getAll: { useCase: require('../usecases/getLists'), customController: require('../customController') },
+    getById: { useCase: require('../usecases/getLists'), idParameter: 'listId' },
+    post: { useCase: require('../usecases/createList') },
+    put: { useCase: require('../usecases/updateList') },
+    delete: { useCase: require('../usecases/deleteList') }
   }
 ]
 ```
 
 The name field is the name of the route.
 
-The idParameter field is the param of the route (GetById, Put and Delete).
+The idParameter field is the param of the route.
+
+The customController field is to replace the default controller.
 
 The other fields refer to http methods using usecases (GetAll, GetById, Post, Put and Delete).
+
+#### Custom Controller
+
+To create a custom controller, it is necessary to follow this pattern.
+
+```javascript
+const customController = async (usecase, req, user, res, next) => {
+  // Implementation
+}
+```
+
+Each method parameter has different data:
+
+- usecase: usecase in ([buchu](https://github.com/herbsjs/buchu)) pattern.
+- req: body, query and params of route.
+- user: parameter passed in the request.
+- res: response object of [express](https://expressjs.com/).
+- next: allows the next queued route handler/middleware to handle the request.
 
 #### Generate Routes
 
@@ -56,7 +75,7 @@ app.use(routes)
 
 #### Authorization
 
-All usecases must implement the authorize method and receive a user to authenticate.
+All use cases must implement the authorization method and receive a user for authentication if using the default controller.
 
 Example:
 
