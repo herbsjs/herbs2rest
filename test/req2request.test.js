@@ -4,7 +4,7 @@ const req2request = require('../src/helpers/req2request')
 
 describe('Helper - req2request', () => {
   const usecase = () => ({
-    authorize: () => false,
+    authorize: async () => false,
 
     requestSchema: {
       name: String,

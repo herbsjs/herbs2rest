@@ -84,7 +84,7 @@ const { Ok, Err, usecase } = require('buchu')
 
 const testUseCase = (injection) =>
   usecase('Test UseCase', {
-    authorize: (user) => {
+    authorize: async (user) => {
       if (user === 'admin')
         return Ok()
       else

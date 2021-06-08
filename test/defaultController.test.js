@@ -22,7 +22,7 @@ describe('Herbs2Rest - Default Controller', () => {
     const res = new Response()
 
     const usecase = () => ({
-      authorize: () => false,
+      authorize: async () => false,
     })
 
     // When
@@ -36,7 +36,7 @@ describe('Herbs2Rest - Default Controller', () => {
     const res = new Response()
 
     const usecase = () => ({
-      authorize: () => true,
+      authorize: async () => true,
       run: () => new Error(),
       requestSchema: {
         name: String,
@@ -66,7 +66,7 @@ describe('Herbs2Rest - Default Controller', () => {
   it('Should return 200 when everything runs ok', async () => {
     const res = new Response()
     const usecase = () => ({
-      authorize: () => true,
+      authorize: async () => true,
       run: () => ({ isOk: true, ok: 'ok' }),
       requestSchema: {
         name: String,

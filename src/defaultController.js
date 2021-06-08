@@ -5,7 +5,7 @@ const defaultController = async (usecase, req, user, res, next, methodName) => {
   try {
     const ucInstance = usecase()
 
-    const hasAccess = ucInstance.authorize(user)
+    const hasAccess = await ucInstance.authorize(user)
 
     if (hasAccess === false) {
       return res.status(403).json({ message: 'User is not authorized' })
