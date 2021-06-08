@@ -1,6 +1,6 @@
 {
   "name": "herbs2rest",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Create a REST API based on HerbsJS",
   "main": "src/herbs2rest.js",
   "scripts": {
@@ -8,8 +8,14 @@
     "coverage": "npx nyc --reporter=lcov --reporter=text-summary mocha test/*.test.js",
     "lint": "npx eslint \"**/*.{js,jsx}\" --quiet",
     "lint:fix": "npx eslint \"**/*.{js,jsx}\" --fix"
-  },
-  "keywords": [],
+    },
+    "keywords": [
+      "buchu",
+      "rest",
+      "herbsjs",
+      "api",
+      "clean architecture"
+    ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
