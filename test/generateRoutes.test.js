@@ -10,7 +10,7 @@ describe('Herbs2Rest - Generate Routes', () => {
   const usecaseTest = () =>
     usecase('Test usecase', {
       request: {},
-      authorize: _ => Ok(),
+      authorize: async _ => Ok(),
       'Test step': step(_ => Ok())
     })
 
