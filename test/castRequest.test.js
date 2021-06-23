@@ -2,7 +2,7 @@ const assert = require('assert')
 
 const castRequest = require('../src/helpers/castRequest')
 
-const { entity, field } = require('gotu')
+const { entity, field } = require('@herbsjs/gotu')
 
 describe('Helper - castRequest', () => {
   it('Should return undefined when value is undefined even if type is defined', () => {

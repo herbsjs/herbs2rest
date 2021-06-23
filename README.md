@@ -5,8 +5,9 @@ Create a REST API based on herbs entities ([gotu](https://github.com/herbsjs/got
 
 
 ### Installing
-
-    $ npm install herbs2rest
+```
+    $ npm install @herbsjs/herbs2rest
+```
 
 ### Using
 
@@ -63,7 +64,7 @@ Generating and using new express routes:
 
 ```javascript
 const express = require('express')
-const { generateRoutes } = require('herbs2rest')
+const { generateRoutes } = require('@herbsjs/herbs2rest')
 
 const app = express()
 const routes = new express.Router()
@@ -80,7 +81,7 @@ All use cases must implement the authorization method and receive a user for aut
 Example:
 
 ```javascript
-const { Ok, Err, usecase } = require('buchu')
+const { Ok, Err, usecase } = require('@herbsjs/buchu')
 
 const testUseCase = (injection) =>
   usecase('Test UseCase', {

@@ -1,4 +1,4 @@
-const { BaseEntity } = require('gotu/src/baseEntity')
+const { BaseEntity } = require('@herbsjs/gotu/src/baseEntity')
 
 const castRequest = (value, type) => {
   if (value === undefined) 
