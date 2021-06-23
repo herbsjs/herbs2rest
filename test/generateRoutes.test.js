@@ -1,7 +1,7 @@
 const assert = require('assert')
 const request = require('supertest')
 
-const { Ok, step, usecase } = require('buchu')
+const { Ok, step, usecase } = require('@herbsjs/buchu')
 const express = require('express')
 
 const generateRoutes = require('../src/generateRoutes')
