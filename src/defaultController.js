@@ -13,13 +13,25 @@ const defaultController = async (usecase, req, user, res, next, methodName) => {
 
     const request = req2request(req, ucInstance)
     const response = await ucInstance.run(request)
-      
-    if (response.isOk) 
+
+    if (response.isOk) {
+      // OK
       res.status(200).json(response.ok)
-    else 
-      res.status(400).json({ error: response.err })
+    }
+    else {
+      // Err
+      let status = 400
+      if (response.isInvalidArgumentsError) status = 400
+      if (response.isPermissionDeniedError) status = 403
+      if (response.isNotFoundError) status = 404
+      if (response.isAlreadyExistsError) status = 409
+      if (response.isInvalidEntityError) status = 422
+      if (response.isUnknownError) status = 500
+      res.status(status).json({ error: response.err })
+    }
 
     res.end()
+
   } catch (error) {
     res.status(500).json({ error: error.name, message: error.message })
 
@@ -27,4 +39,4 @@ const defaultController = async (usecase, req, user, res, next, methodName) => {
   }
 }
 
-module.exports =  defaultController
+module.exports = defaultController
