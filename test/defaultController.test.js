@@ -1,7 +1,6 @@
 const assert = require('assert')
 const { Ok, Err, usecase, step } = require('@herbsjs/herbs')
 const defaultController = require('../src/defaultController')
-const { ok } = require('assert')
 
 describe('Herbs2Rest - Default Controller', () => {
   class Response {
@@ -184,7 +183,7 @@ describe('Herbs2Rest - Default Controller', () => {
 
     const req = {}
 
-    await defaultController(usecase, req, null, res, () => { })
+    await defaultController(uc, req, null, res, () => { })
 
     assert.deepStrictEqual(res.statusCode, 500)
   })
