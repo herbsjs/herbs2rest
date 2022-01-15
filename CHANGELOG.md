@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/herbsjs/herbs2rest/compare/v2.0.0...v2.0.1) (2022-01-15)
+
+
+### Bug Fixes
+
+* update herbs dependencie ([fa75a88](https://github.com/herbsjs/herbs2rest/commit/fa75a88f1953570d7b0d0227d95bff8caa43f92b))
+
 # [2.0.0](https://github.com/herbsjs/herbs2rest/compare/v1.0.0...v2.0.0) (2021-12-04)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@herbsjs/herbs2rest",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Create a REST API based on HerbsJS",
   "main": "src/herbs2rest.js",
   "scripts": {
