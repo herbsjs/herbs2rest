@@ -1,16 +1,18 @@
 const generateRoutes = require('./generateRoutes')
 
 function findEntitiesAndGroups(herbarium) {
-    const items = Array.from(herbarium.usecases.all.values()).map(e => ({ id: e.entity, group: e.group }))
+    const items = Array.from(herbarium.usecases.all.values()).map(usecaseItem =>
+        ({ id: usecaseItem.entity, group: usecaseItem.group })
+    )
     const distinctItems = items.filter(({ entity, group }, index, self) =>
-        self.findIndex(e => e.entity === entity && e.group === group) === index
+        self.findIndex(usecaseItem => usecaseItem.entity === entity && usecaseItem.group === group) === index
     )
     return distinctItems
 }
 
 function findUsecases(herbarium, entity) {
     const usecases = herbarium.usecases
-    const getAll = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0].usecase  // herbarium.crud.readAll
+    const getAll = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0].usecase
     const getById = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0].usecase
     const post = usecases.findBy({ entity: entity, operation: herbarium.crud.create })[0].usecase
     const put = usecases.findBy({ entity: entity, operation: herbarium.crud.update })[0].usecase
@@ -18,7 +20,7 @@ function findUsecases(herbarium, entity) {
     return { getAll, getById, post, put, del }
 }
 
-function getControllers(herbarium){
+function getControllers(herbarium) {
     const entities = findEntitiesAndGroups(herbarium)
 
     const controllers = entities.map(entity => {

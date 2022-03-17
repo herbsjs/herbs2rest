@@ -20,41 +20,26 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     herbarium.entities
       .add(Test, 'Test')
 
-    const read = () => usecase('Read usecase', {
-      request: {},
-      authorize: async _ => Ok(),
-      'Test step': step(_ => Ok())
-    })
-    const create = () => usecase('Create usecase', {
-      request: {},
-      authorize: async _ => Ok(),
-      'Test step': step(_ => Ok())
-    })
-    const update = () => usecase('Update usecase', {
-      request: {},
-      authorize: async _ => Ok(),
-      'Test step': step(_ => Ok())
-    })
-    const deleteuc = () => usecase('Delete usecase', {
+    const crudOperation = (param) => () => usecase(`${param} Usecase`, {
       request: {},
       authorize: async _ => Ok(),
       'Test step': step(_ => Ok())
     })
 
     herbarium.usecases
-      .add(read, 'ReadUsecase')
+      .add(crudOperation('Read'), 'ReadUsecase')
       .metadata({ group: 'Test', operation: herbarium.crud.read, entity: Test })
 
     herbarium.usecases
-      .add(create, 'CreateUsecase')
+      .add(crudOperation('Create'), 'CreateUsecase')
       .metadata({ group: 'Test', operation: herbarium.crud.create, entity: Test })
 
     herbarium.usecases
-      .add(update, 'UpdateUsecase')
+      .add(crudOperation('Update'), 'UpdateUsecase')
       .metadata({ group: 'Test', operation: herbarium.crud.update, entity: Test })
 
     herbarium.usecases
-      .add(deleteuc, 'DeleteUsecase')
+      .add(crudOperation('Delete'), 'DeleteUsecase')
       .metadata({ group: 'Test', operation: herbarium.crud.delete, entity: Test })
   }
 
