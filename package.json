@@ -42,7 +42,8 @@
     "supertest": "^6.2.1"
   },
   "peerDependencies": {
-    "@herbsjs/herbs": "^1.4.4"
+    "@herbsjs/herbs": "^1.4.4",
+    "express": "^4.17.2"
   },
   "repository": {
     "type": "git",
