@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/herbsjs/herbs2rest/compare/v2.0.1...v2.0.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* add peerDependencies and update dependencies ([2cfcda9](https://github.com/herbsjs/herbs2rest/commit/2cfcda998766765ed284b9fc7a3b45ec566498af))
+
 ## [2.0.1](https://github.com/herbsjs/herbs2rest/compare/v2.0.0...v2.0.1) (2022-01-15)
 
 
