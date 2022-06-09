@@ -1,6 +1,6 @@
 {
   "name": "@herbsjs/herbs2rest",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Create a REST API based on HerbsJS",
   "main": "src/herbs2rest.js",
   "scripts": {
@@ -21,28 +21,29 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@herbsjs/herbs": "^1.4.2",
+    "@babel/eslint-parser": "^7.18.2",
+    "@herbsjs/herbs": "^1.4.5",
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^8.0.2",
-    "@semantic-release/npm": "^8.0.3",
+    "@semantic-release/github": "^8.0.4",
+    "@semantic-release/npm": "^9.0.1",
     "@semantic-release/release-notes-generator": "^10.0.3",
-    "@babel/eslint-parser": "^7.16.5",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.6.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "express": "^4.17.2",
-    "mocha": "^9.1.4",
+    "express": "^4.18.1",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.5.1",
-    "semantic-release": "^18.0.1",
-    "supertest": "^6.2.1"
+    "prettier": "^2.6.2",
+    "semantic-release": "^19.0.2",
+    "supertest": "^6.2.3"
   },
   "peerDependencies": {
-    "@herbsjs/herbs": "^1.4.2"
+    "@herbsjs/herbs": "^1.4.5",
+    "express": "^4.18.1"
   },
   "repository": {
     "type": "git",
