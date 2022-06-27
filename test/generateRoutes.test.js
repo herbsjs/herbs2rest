@@ -7,6 +7,20 @@ const express = require('express')
 const generateRoutes = require('../src/generateRoutes')
 
 describe('Herbs2Rest - Generate Routes', () => {
+  const entityTest = {
+    id : {
+      prototype: {
+        meta: {
+          schema: {
+            testId: {
+              name: 'testId',
+              options: {isId: true}
+            } 
+          }
+        }
+      }
+    }
+  }
   const usecaseTest = () =>
     usecase('Test usecase', {
       request: {},
@@ -22,6 +36,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
+        entity : entityTest,
         getAll: { usecase: usecaseTest }
       },
     ]
@@ -43,6 +58,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
+        entity : entityTest,
         getById: { usecase: usecaseTest }
       },
     ]
@@ -64,6 +80,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
+        entity : entityTest,
         post: { usecase: usecaseTest }
       },
     ]
@@ -85,6 +102,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
+        entity : entityTest,
         put: { usecase: usecaseTest }
       },
     ]
@@ -106,6 +124,7 @@ describe('Herbs2Rest - Generate Routes', () => {
     const controllerList = [
       {
         name: 'lists',
+        entity : entityTest,
         delete: { usecase: usecaseTest }
       },
     ]
