@@ -8,7 +8,6 @@ const generateRoutes = require('../src/generateRoutes')
 
 describe('Herbs2Rest - Generate Routes', () => {
   const entityTest = {
-    id : {
       prototype: {
         meta: {
           schema: {
@@ -19,7 +18,6 @@ describe('Herbs2Rest - Generate Routes', () => {
           }
         }
       }
-    }
   }
   const usecaseTest = () =>
     usecase('Test usecase', {

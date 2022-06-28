@@ -23,6 +23,7 @@ The method needs a list of controllers like the example below:
 const controllerList = [
   {
     name: 'lists',
+    entity: require('../entities/user')
     getAll: { usecase: require('../usecases/getLists'), controller: require('../controller') },
     getById: { usecase: require('../usecases/getLists'), id: 'listId' },
     post: { usecase: require('../usecases/createList') },
@@ -34,7 +35,7 @@ const controllerList = [
 
 The `name` field is the name of the route.
 
-The `id` field is the param of the route.
+The `id` field is a string representing the id field in the use case request and can be used for GetById, Put and Delete. If you want to declare the id name dynamically with the entity field id, you need to declare the "entity" property in your controller list. The default value is "id".
 
 The `controller` field is to replace the default controller.
 
