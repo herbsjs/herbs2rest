@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/herbsjs/herbs2rest/compare/v3.0.0...v3.0.1) (2022-06-29)
+
+
+### Bug Fixes
+
+* **route:** fix generate route based on a entity ([19b3fce](https://github.com/herbsjs/herbs2rest/commit/19b3fce876b2621f4154dd85c4eee51ccc3b568a))
+
 # [3.0.0](https://github.com/herbsjs/herbs2rest/compare/v2.0.2...v3.0.0) (2022-06-27)
 
 
