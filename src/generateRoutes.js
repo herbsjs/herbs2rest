@@ -9,7 +9,7 @@ const generateRoutes = (routes, app, endpointInfo = false) => {
   routes.forEach(route => {
     info(`\n${route.name} endpoints`)
 
-    const entitySchemas = route.entity.id.prototype.meta.schema
+    const entitySchemas = route.entity.prototype.meta.schema
     const [idFieldName] = Object.entries(entitySchemas).find(([_key, value]) => value.options.isId)
 
     if (route.getAll) {
