@@ -9,6 +9,9 @@ const generateRoutes = (routes, app, endpointInfo = false) => {
   routes.forEach(route => {
     info(`\n${route.name} endpoints`)
 
+    const entitySchemas = route.entity.prototype.meta.schema
+    const [idFieldName] = Object.entries(entitySchemas).find(([_key, value]) => value.options.isId)
+
     if (route.getAll) {
       const endpoint = `/${route.name}`
       info(`    GET ${endpoint} -> ${route.getAll.usecase().description}`)
@@ -22,7 +25,7 @@ const generateRoutes = (routes, app, endpointInfo = false) => {
     }
 
     if (route.getById) {
-      const endpoint = `/${route.name}/:${route.getById.id || 'id'}`
+      const endpoint = `/${route.name}/:${route.getById.id || idFieldName || route.idEntity}`
       info(`    GET ${endpoint} -> ${route.getById.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
@@ -46,7 +49,7 @@ const generateRoutes = (routes, app, endpointInfo = false) => {
     }
 
     if (route.put) {
-      const endpoint = `/${route.name}/:${route.put.id || 'id'}`
+      const endpoint = `/${route.name}/:${route.put.id || idFieldName || 'id'}`
       info(`    PUT ${endpoint} -> ${route.put.usecase().description}`)
       app.put(endpoint, async (req, res, next) => {
         const request = { body: req.body, params: req.params }
@@ -58,7 +61,7 @@ const generateRoutes = (routes, app, endpointInfo = false) => {
     }
 
     if (route.delete) {
-      const endpoint = `/${route.name}/:${route.delete.id || 'id'}`
+      const endpoint = `/${route.name}/:${route.delete.id || idFieldName || 'id'}`
       info(`    DELETE ${endpoint} -> ${route.delete.usecase().description}`)
       app.delete(endpoint, async (req, res, next) => {
         const request = { params: req.params }

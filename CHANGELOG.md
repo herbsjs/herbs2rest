@@ -1,3 +1,23 @@
+## [3.0.1](https://github.com/herbsjs/herbs2rest/compare/v3.0.0...v3.0.1) (2022-06-29)
+
+
+### Bug Fixes
+
+* **route:** fix generate route based on a entity ([19b3fce](https://github.com/herbsjs/herbs2rest/commit/19b3fce876b2621f4154dd85c4eee51ccc3b568a))
+
+# [3.0.0](https://github.com/herbsjs/herbs2rest/compare/v2.0.2...v3.0.0) (2022-06-27)
+
+
+### Features
+
+* **generateroutes.js (test):** update generate routes test ([ea44229](https://github.com/herbsjs/herbs2rest/commit/ea4422901efcdd074e4bc9cdec7ad60825052cef))
+* **generateroutes.js:** generate route param name dinamically with entity's id field name ([8f35fa4](https://github.com/herbsjs/herbs2rest/commit/8f35fa4124299b5a60df6408972886ecd867c3f3))
+
+
+### BREAKING CHANGES
+
+* **generateroutes.js:** We need a route's property entity to be passed as a parameter
+
 ## [2.0.2](https://github.com/herbsjs/herbs2rest/compare/v2.0.1...v2.0.2) (2022-06-08)
 
 
