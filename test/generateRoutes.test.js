@@ -2,10 +2,7 @@ const assert = require('assert')
 const request = require('supertest')
 
 const { Ok, step, usecase } = require('@herbsjs/herbs')
-<<<<<<< HEAD
-=======
 const { entity, id, field } = require('@herbsjs/herbs')
->>>>>>> 31fa23b9960f0db5f4a6b7cca9022f35a3d992c9
 const express = require('express')
 
 const { generateRoutes } = require('../src/generateRoutes')
