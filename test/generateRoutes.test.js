@@ -5,7 +5,7 @@ const { Ok, step, usecase } = require('@herbsjs/herbs')
 const { entity, id, field } = require('@herbsjs/herbs')
 const express = require('express')
 
-const generateRoutes = require('../src/generateRoutes')
+const { generateRoutes } = require('../src/generateRoutes')
 
 describe('Herbs2Rest - Generate Routes', () => {
   const entityTest = entity('test entity', {

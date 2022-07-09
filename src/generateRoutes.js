@@ -1,6 +1,6 @@
 const defaultController = require('./defaultController')
 
-const generateRoutes = (routes, app, endpointInfo = false) => {
+function generateRoutes(routes, app, endpointInfo = false) {
   // eslint-disable-next-line no-console
   function info(msg) { if (endpointInfo) console.info(msg) }
 
@@ -74,4 +74,4 @@ const generateRoutes = (routes, app, endpointInfo = false) => {
   })
 }
 
-module.exports = generateRoutes
+module.exports = {generateRoutes}
