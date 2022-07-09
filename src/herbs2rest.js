@@ -1,4 +1,4 @@
 module.exports = {
   generateRoutes: require('./generateRoutes'),
-  generateRoutesWithHerbarium: require('./generateRoutesWithHerbarium')
+  generateControllers: require('./generateControllers')
 }

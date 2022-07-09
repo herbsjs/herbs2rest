@@ -1,4 +1,19 @@
-const generateRoutesOriginal = require('./generateRoutes')
+function generateControllers(herbarium) {
+    const entities = findEntitiesAndGroups(herbarium)
+
+    const controllers = entities.map(entity => {
+        const ucList = findUsecases(herbarium, entity.id)
+        return {
+            name: entity.group,
+            getAll: { usecase: ucList.getAll },
+            getById: { usecase: ucList.getById, id: 'ids' },
+            post: { usecase: ucList.post },
+            put: { usecase: ucList.put },
+            delete: { usecase: ucList.del }
+        }
+    })
+    return controllers
+}
 
 function findEntitiesAndGroups(herbarium) {
     const items = Array.from(herbarium.usecases.all.values()).map(usecaseItem =>
@@ -20,26 +35,4 @@ function findUsecases(herbarium, entity) {
     return { getAll, getById, post, put, del }
 }
 
-function generateControllers(herbarium) {
-    const entities = findEntitiesAndGroups(herbarium)
-
-    const controllers = entities.map(entity => {
-        const ucList = findUsecases(herbarium, entity.id)
-        return {
-            name: entity.group,
-            getAll: { usecase: ucList.getAll },
-            getById: { usecase: ucList.getById, id: 'ids' },
-            post: { usecase: ucList.post },
-            put: { usecase: ucList.put },
-            delete: { usecase: ucList.del }
-        }
-    })
-    return controllers
-}
-
-function generateRoutes(herbarium, routes, showEndpoints) {
-    const controllers = generateControllers(herbarium)
-    generateRoutesOriginal(controllers, routes, showEndpoints)
-}
-
-module.exports = {generateControllers, generateRoutes}
+module.exports = {generateControllers}

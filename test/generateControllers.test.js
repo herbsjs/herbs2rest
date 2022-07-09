@@ -1,12 +1,13 @@
 const assert = require('assert')
 const request = require('supertest')
 
-const { Ok, step, usecase } = require('@herbsjs/buchu')
+const { Ok, step, usecase } = require('@herbsjs/herbs')
 const express = require('express')
 
 const { herbarium } = require('@herbsjs/herbarium')
 const { entity, field } = require('@herbsjs/herbs')
-const { generateRoutes } = require('../src/generateRoutesWithHerbarium')
+const { generateRoutes } = require('../src/generateRoutes')
+const { generateControllers } = require('../src/generateControllers')
 
 describe('Herbs2Rest - Generate Routes With Herbarium', () => {
   const usecaseTest = () => {
@@ -49,10 +50,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     // Given
     const app = express()
     const routes = new express.Router()
-
+    const controllers = generateControllers(herbarium)
 
     // When
-    generateRoutes(herbarium, routes, true)
+    generateRoutes(controllers, routes, true)
 
     // Then
     request(app.use(routes))
@@ -64,10 +65,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     // Given
     const app = express()
     const routes = new express.Router()
-
+    const controllers = generateControllers(herbarium)
 
     // When
-    generateRoutes(herbarium, routes, true)
+    generateRoutes(controllers, routes, true)
 
     // Then
     request(app.use(routes))
@@ -79,10 +80,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       // Given
       const app = express()
       const routes = new express.Router()
-
+      const controllers = generateControllers(herbarium)
 
       // When
-      generateRoutes(herbarium, routes, true)
+      generateRoutes(controllers, routes, true)
 
       // Then
       request(app.use(routes))
@@ -94,10 +95,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       // Given
       const app = express()
       const routes = new express.Router()
-
+      const controllers = generateControllers(herbarium)
 
       // When
-      generateRoutes(herbarium, routes, true)
+      generateRoutes(controllers, routes, true)
 
       // Then
       request(app.use(routes))
@@ -109,10 +110,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       // Given
       const app = express()
       const routes = new express.Router()
-
+      const controllers = generateControllers(herbarium)
 
       // When
-      generateRoutes(herbarium, routes, true)
+      generateRoutes(controllers, routes, true)
 
       // Then
       request(app.use(routes))

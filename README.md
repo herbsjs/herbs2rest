@@ -58,7 +58,25 @@ Each method parameter has different data:
 - res: response object of [express](https://expressjs.com/).
 - next: allows the next queued route handler/middleware to handle the request.
 
-#### Generate Routes
+#### Generate Routes with Herbarium
+
+If you already use Herbarium, a centralized and standardized repository and discovery service for Herbs objects, you can automatically generate and use new express routes:
+
+```javascript
+const express = require('express')
+const { herbarium } = require('@herbsjs/herbarium')
+const { generateControllers, generateRoutes } = require('@herbsjs/herbs2rest')
+
+const app = express()
+const routes = new express.Router()
+const controllers = generateControllers(herbarium)
+
+generateRoutes(controllers, routes, true)  // true = console info endpoints
+
+app.use(routes)
+```
+
+#### Generate Routes (Advanced)
 
 Generating and using new express routes:
 
@@ -70,23 +88,6 @@ const app = express()
 const routes = new express.Router()
 
 generateRoutes(controllerList, routes, true)  // true = console info endpoints
-
-app.use(routes)
-```
-
-#### Generate Routes With Herbarium
-
-As an alternative in a simpler way, if you already use Herbarium, a centralized and standardized repository and discovery service for Herbs objects, you can automatically generate and use new express routes:
-
-```javascript
-const express = require('express')
-const { herbarium } = require('@herbsjs/herbarium')
-const { generateRoutesWithHerbarium } = require('@herbsjs/herbs2rest')
-
-const app = express()
-const routes = new express.Router()
-
-generateRoutesWithHerbarium(herbarium, routes, true)  // true = console info endpoints
 
 app.use(routes)
 ```
