@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/herbsjs/herbs2rest/compare/v3.0.1...v3.0.2) (2022-07-11)
+
+
+### Bug Fixes
+
+* **req2request:** fix cast for Boolean and Date ([c4d0388](https://github.com/herbsjs/herbs2rest/commit/c4d0388b839bf05741b528a760ca2f5b149d184e))
+
 ## [3.0.1](https://github.com/herbsjs/herbs2rest/compare/v3.0.0...v3.0.1) (2022-06-29)
 
 
