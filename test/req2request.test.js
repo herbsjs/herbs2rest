@@ -9,26 +9,34 @@ describe('Helper - req2request', () => {
     requestSchema: {
       name: String,
       number: Number,
+      boolean: Boolean,
+      date: Date,
       ids: [Number]
     },
 
     run: () => true,
   })
 
-  it('Should return the request accordingly to the usecase request schema', () => {
+  it('Should return the request accordingly to the usecase request schema - only body', () => {
     const req = {
       body: {
         name: 'test',
+        number: '1',
+        boolean: 'true',
+        date: '2019-07-28',
+        ids: ['1', '2'],
         otherUnused: ''
       },
       params: {
-        number: '1'
       }
     }
 
     const expected = {
       name: 'test',
-      number: 1
+      number: 1,
+      boolean: true,
+      date: new Date('2019-07-28'),
+      ids: [1, 2]
     }
 
     const result = req2request(req, usecase())
@@ -36,26 +44,47 @@ describe('Helper - req2request', () => {
     assert.deepStrictEqual(expected, result)
   }),
 
-  it('Should return the request accordingly to the usecase request schema with parameters', () => {
-    const req = {
-      body: {
-        name: 'test',
-        number: '1',
-        otherUnused: ''
-      },
-      params: {
-        ids: '1'
+    it('Should return the request accordingly to the usecase request schema - body and query string', () => {
+      const req = {
+        body: {
+          name: 'test',
+          otherUnused: ''
+        },
+        params: {
+          number: '1'
+        }
       }
-    }
 
-    const expected = {
-      name: 'test',
-      number: 1,
-      ids: [1]
-    }
+      const expected = {
+        name: 'test',
+        number: 1
+      }
 
-    const result = req2request(req, usecase())
+      const result = req2request(req, usecase())
 
-    assert.deepStrictEqual(expected, result)
-  })
+      assert.deepStrictEqual(expected, result)
+    }),
+
+    it('Should return the request accordingly to the usecase request schema with parameters', () => {
+      const req = {
+        body: {
+          name: 'test',
+          number: '1',
+          otherUnused: ''
+        },
+        params: {
+          ids: '1'
+        }
+      }
+
+      const expected = {
+        name: 'test',
+        number: 1,
+        ids: [1]
+      }
+
+      const result = req2request(req, usecase())
+
+      assert.deepStrictEqual(expected, result)
+    })
 })
