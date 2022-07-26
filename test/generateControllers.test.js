@@ -15,7 +15,7 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
 
     const Test =
       entity('Test', {
-        id: field(Number)
+        id: field(Number, {isId: true})
       })
 
     herbarium.entities

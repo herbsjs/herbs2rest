@@ -4,6 +4,7 @@ function generateControllers(herbarium) {
     const controllers = entities.map(entity => {
         const ucList = findUsecases(herbarium, entity.id)
         return {
+            entity: entity.id,
             name: entity.group,
             getAll: { usecase: ucList.getAll },
             getById: { usecase: ucList.getById, id: 'ids' },
