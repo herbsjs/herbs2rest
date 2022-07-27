@@ -1,8 +1,7 @@
 const assert = require('assert')
 const request = require('supertest')
 
-const { Ok, step, usecase } = require('@herbsjs/herbs')
-const { entity, id, field } = require('@herbsjs/herbs')
+const { Ok, step, usecase, entity, id, field } = require('@herbsjs/herbs')
 const express = require('express')
 
 const { generateRoutes } = require('../src/generateRoutes')
