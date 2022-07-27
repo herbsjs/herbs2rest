@@ -40,12 +40,14 @@
     "prettier": "^2.6.2",
     "semantic-release": "^19.0.2",
     "supertest": "^6.2.3",
-    "@herbsjs/herbarium": "^1.2.0"
+    "@herbsjs/herbarium": "^1.2.0",
+    "@herbsjs/buchu": "^1.6.2"
   },
   "peerDependencies": {
     "@herbsjs/herbs": "^1.6.1",
     "express": "^4.18.1",
-    "@herbsjs/herbarium": "^1.2.0"
+    "@herbsjs/herbarium": "^1.2.0",
+    "@herbsjs/buchu": "^1.6.2"
   },
   "repository": {
     "type": "git",
