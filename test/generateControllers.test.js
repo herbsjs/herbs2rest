@@ -1,11 +1,10 @@
 const assert = require('assert')
 const request = require('supertest')
 
-const { Ok, step, usecase } = require('@herbsjs/herbs')
+const { Ok, step, usecase, entity, field } = require('@herbsjs/herbs')
 const express = require('express')
 
 const { herbarium } = require('@herbsjs/herbarium')
-const { entity, field } = require('@herbsjs/herbs')
 const { generateRoutes } = require('../src/generateRoutes')
 const { generateControllers } = require('../src/generateControllers')
 
