@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/herbsjs/herbs2rest/compare/v3.0.2...v3.1.0) (2022-08-16)
+
+
+### Bug Fixes
+
+* **herbs:** update herbarium version ([f31373c](https://github.com/herbsjs/herbs2rest/commit/f31373c40778b0950c746b430acb52f5eb9660b5))
+
+
+### Features
+
+* **herbs2rest:** using Herbarium to create REST endpoints ([c97fa52](https://github.com/herbsjs/herbs2rest/commit/c97fa52a1728078a8175e75b17fa91d912606183)), closes [#22](https://github.com/herbsjs/herbs2rest/issues/22)
+
 ## [3.0.2](https://github.com/herbsjs/herbs2rest/compare/v3.0.1...v3.0.2) (2022-07-11)
 
 
