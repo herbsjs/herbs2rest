@@ -35,7 +35,17 @@ const controllerList = [
 
 The `name` field is the name of the route.
 
-The `id` field is a string representing the id field in the use case request and can be used for GetById, Put and Delete. If you want to declare the id name dynamically with the entity field id, you need to declare the "entity" property in your controller list. The default value is "id".
+The `id` field is a string representing the id field in the use case request and can be used for GetById, Put and Delete. If you want to declare the id name dynamically with the entity field id, you need to declare the "entity.id" property in your controller list. The default value is "id". See the example below:
+
+```javascript
+    const controllers = entities.map(entity => {
+        const usecases = findUsecases(entity.id)
+        const controllers = { name: entity.group, entity: entity.id }
+        if (usecases.getAll) controllers.getAll = { usecase: usecases.getAll }
+        ...
+        return controllers
+    })
+```
 
 The `controller` field is to replace the default controller.
 

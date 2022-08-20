@@ -1,4 +1,5 @@
 const assert = require('assert')
+const { expect } = require('chai')
 const request = require('supertest')
 
 const { Ok, step, usecase } = require('@herbsjs/buchu')
@@ -25,6 +26,34 @@ describe('Herbs2Rest - Generate Routes', () => {
       authorize: async _ => Ok(),
       'Test step': step(_ => Ok())
     })
+
+  it('Should get dinamically entity id', () => {
+    // Given
+    const route = {
+      entity: entityTest
+    }
+    function idFieldName(route){
+        let idFieldName = null
+        if(route.entity){
+          [idFieldName] = Object.entries(route.entity.prototype.meta.schema).find(([_key, value]) => value.options.isId)
+        }
+        return `/entity/${idFieldName}`
+    }
+
+    const controllerList =
+      {
+        name: 'lists',
+        entity : entityTest,
+        getAll: { 
+          usecase: usecaseTest,
+          endpoint: idFieldName(route)
+         }
+      }
+
+
+    // Then
+    expect(controllerList.getAll.endpoint).to.be.equal('/entity/testId')
+  })
 
   it('Should resolve and create a get all route', (done) => {
     // Given
