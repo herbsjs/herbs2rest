@@ -3,7 +3,8 @@ const req2request = require('./helpers/req2request')
 
 const defaultController = async (usecase, req, user, res, next, methodName) => {
   try {
-    const ucInstance = usecase()
+    const injection = { user }
+    const ucInstance = usecase(injection)
 
     const hasAccess = await ucInstance.authorize(user)
 

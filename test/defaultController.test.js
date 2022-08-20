@@ -35,6 +35,30 @@ describe('Herbs2Rest - Default Controller', () => {
     assert.deepStrictEqual(res.statusCode, 200)
   })
 
+  it('Usecase should have access to user inside ctx', async () => {
+
+    const res = new Response()
+
+    const uc = (injection) =>
+      usecase('Usecase with User', {
+        request: {},
+        authorize: async () => Ok(),
+        setup: ctx => (ctx.di = Object.assign({}, injection)),
+        'Verify if the User is present': step((ctx) => ctx.ret = ctx.di.user)
+      })
+
+    const req = {}
+
+    const user = {
+      id: '101'
+    }
+
+    await defaultController(uc, req, user, res, () => { })
+
+    assert.deepStrictEqual(res.statusCode, 200)
+    assert.deepStrictEqual(res.data, user)
+  })
+
   it('Should not authorize usecase', async () => {
     // Given
     const res = new Response()
@@ -199,6 +223,5 @@ describe('Herbs2Rest - Default Controller', () => {
 
     assert.deepStrictEqual(res.statusCode, 500)
   })
-
 
 })
