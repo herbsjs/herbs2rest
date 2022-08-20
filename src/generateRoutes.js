@@ -74,4 +74,5 @@ function generateRoutes(routes, app, endpointInfo = false) {
   })
 }
 
+module.exports = generateRoutes
 module.exports.generateRoutes = generateRoutes
