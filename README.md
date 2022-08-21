@@ -1,4 +1,4 @@
-![Node.js CI](https://github.com/herbsjs/herbs2rest/actions/workflows/on_push.yml/badge.svg?branch=main)[![codecov](https://codecov.io/gh/herbsjs/herbs2rest/branch/main/graph/badge.svg)](https://codecov.io/gh/herbsjs/herbs2rest)
+[![Build](https://github.com/herbsjs/herbs2rest/actions/workflows/cd.yml/badge.svg?branch=main)](https://github.com/herbsjs/herbs2rest/actions/workflows/cd.yml)[![codecov](https://codecov.io/gh/herbsjs/herbs2rest/branch/main/graph/badge.svg)](https://codecov.io/gh/herbsjs/herbs2rest)
 
 # herbs2rest
 Create a REST API based on herbs entities ([gotu](https://github.com/herbsjs/gotu)) and usecases ([buchu](https://github.com/herbsjs/buchu)).
@@ -38,7 +38,17 @@ const controllerList = [
 
 The `name` field is the name of the route.
 
-The `id` field is the param of the route.
+The `id` field is a string representing the id field in the use case request and can be used for GetById, Put and Delete. If you want to declare the id name dynamically with the entity field id, you need to declare the "entity.id" property in your controller list. The default value is "id". See the example below:
+
+```javascript
+    const controllers = entities.map(entity => {
+        const usecases = findUsecases(entity.id)
+        const controllers = { name: entity.group, entity: entity.id }
+        if (usecases.getAll) controllers.getAll = { usecase: usecases.getAll }
+        ...
+        return controllers
+    })
+```
 
 The `controller` field is to replace the default controller.
 

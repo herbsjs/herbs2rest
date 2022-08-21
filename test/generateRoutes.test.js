@@ -12,6 +12,10 @@ describe('Herbs2Rest - Generate Routes', () => {
     testField: field(String)
   })
 
+  const entityTestWithoutId = entity('test entity', {
+    testField: field(String)
+  })
+
   const usecaseTest = () =>
     usecase('Test usecase', {
       request: {},
@@ -41,6 +45,28 @@ describe('Herbs2Rest - Generate Routes', () => {
       .expect(200, done)
   })
 
+  it('Should resolve and create a get all route wihout entity', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: undefined,
+        getAll: { usecase: usecaseTest }
+      },
+    ]
+
+    // When
+    generateRoutes(controllerList, routes)
+
+    // Then
+    request(app.use(routes))
+      .get('/lists')
+      .expect(200, done)
+  })
+
   it('Should resolve and create a get by id route', (done) => {
     // Given
     const app = express()
@@ -50,6 +76,28 @@ describe('Herbs2Rest - Generate Routes', () => {
       {
         name: 'lists',
         entity: entityTest,
+        getById: { usecase: usecaseTest }
+      },
+    ]
+
+    // When
+    generateRoutes(controllerList, routes)
+
+    // Then
+    request(app.use(routes))
+      .get('/lists/1')
+      .expect(200, done)
+  }),
+
+  it('Should resolve and create a get wihout id route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: entityTestWithoutId,
         getById: { usecase: usecaseTest }
       },
     ]
