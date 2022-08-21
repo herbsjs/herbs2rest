@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/herbsjs/herbs2rest/compare/v3.1.0...v3.1.1) (2022-08-21)
+
+
+### Bug Fixes
+
+* fix generation route without entity or entity without id ([a4de657](https://github.com/herbsjs/herbs2rest/commit/a4de6577bfcaacfb6c8c489a4eb3bb0ca8a83066))
+
 # [3.1.0](https://github.com/herbsjs/herbs2rest/compare/v3.0.2...v3.1.0) (2022-08-16)
 
 
