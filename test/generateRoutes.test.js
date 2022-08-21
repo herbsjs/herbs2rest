@@ -45,6 +45,28 @@ describe('Herbs2Rest - Generate Routes', () => {
       .expect(200, done)
   })
 
+  it('Should resolve and create a get all route wihout entity', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: undefined,
+        getAll: { usecase: usecaseTest }
+      },
+    ]
+
+    // When
+    generateRoutes(controllerList, routes)
+
+    // Then
+    request(app.use(routes))
+      .get('/lists')
+      .expect(200, done)
+  })
+
   it('Should resolve and create a get by id route', (done) => {
     // Given
     const app = express()
