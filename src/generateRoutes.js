@@ -9,8 +9,10 @@ function generateRoutes(routes, app, endpointInfo = false) {
   routes.forEach(route => {
     info(`\n${route.name} endpoints`)
 
-    const entitySchemas = route.entity.prototype.meta.schema
-    const [idFieldName] = Object.entries(entitySchemas).find(([_key, value]) => value.options.isId)
+    let idFieldName = null
+    if(route.entity){
+      [idFieldName] = Object.entries(route.entity.prototype.meta.schema).find(([_key, value]) => value?.options.isId) || []
+    }
 
     if (route.getAll) {
       const endpoint = `/${route.name}`
@@ -25,7 +27,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getById) {
-      const endpoint = `/${route.name}/:${route.getById.id || idFieldName || route.idEntity}`
+      const endpoint = `/${route.name}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
       info(`    GET ${endpoint} -> ${route.getById.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
