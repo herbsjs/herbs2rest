@@ -120,6 +120,33 @@ const testUseCase = (injection) =>
   })
 ```
 
+#### User
+
+All use cases receive the user that was passed in the request if they are using the default controller.
+
+Example:
+
+```javascript
+const { Ok, Err, usecase, step } = require('@herbsjs/buchu')
+
+const testUseCase = (injection) =>
+  usecase('Test UseCase', {
+    authorize: async (user) => {
+      if (user === 'admin')
+        return Ok()
+      else
+        return Err('Invalid user')
+    },
+
+    setup: ctx => (ctx.di = Object.assign({}, dependency, injection)),
+
+    'Print the user passed on request': step(ctx => {
+      console.log(ctx.di.user) // User passed in the request
+
+      return Ok()
+    }),
+  })
+
 ---
 
 #### Example
