@@ -4,7 +4,8 @@ const request = require('supertest')
 const { Ok, step, usecase, entity, id, field } = require('@herbsjs/herbs')
 const express = require('express')
 
-const { generateRoutes } = require('../src/generateRoutes')
+const generateRoutes = require('../src/generateRoutes')
+const defaultController = require('../src/defaultController')
 
 describe('Herbs2Rest - Generate Routes', () => {
   const entityTest = entity('test entity', {
@@ -32,7 +33,7 @@ describe('Herbs2Rest - Generate Routes', () => {
       {
         name: 'lists',
         entity: entityTest,
-        getAll: { usecase: usecaseTest }
+        getAll: { usecase: usecaseTest, controller: defaultController }
       },
     ]
 
@@ -54,7 +55,7 @@ describe('Herbs2Rest - Generate Routes', () => {
       {
         name: 'lists',
         entity: undefined,
-        getAll: { usecase: usecaseTest }
+        getAll: { usecase: usecaseTest, controller: defaultController }
       },
     ]
 
@@ -76,7 +77,7 @@ describe('Herbs2Rest - Generate Routes', () => {
       {
         name: 'lists',
         entity: entityTest,
-        getById: { usecase: usecaseTest }
+        getById: { usecase: usecaseTest, controller: defaultController }
       },
     ]
 
@@ -89,27 +90,27 @@ describe('Herbs2Rest - Generate Routes', () => {
       .expect(200, done)
   }),
 
-  it('Should resolve and create a get wihout id route', (done) => {
-    // Given
-    const app = express()
-    const routes = new express.Router()
+    it('Should resolve and create a get wihout id route', (done) => {
+      // Given
+      const app = express()
+      const routes = new express.Router()
 
-    const controllerList = [
-      {
-        name: 'lists',
-        entity: entityTestWithoutId,
-        getById: { usecase: usecaseTest }
-      },
-    ]
+      const controllerList = [
+        {
+          name: 'lists',
+          entity: entityTestWithoutId,
+          getById: { usecase: usecaseTest, controller: defaultController }
+        },
+      ]
 
-    // When
-    generateRoutes(controllerList, routes)
+      // When
+      generateRoutes(controllerList, routes)
 
-    // Then
-    request(app.use(routes))
-      .get('/lists/1')
-      .expect(200, done)
-  }),
+      // Then
+      request(app.use(routes))
+        .get('/lists/1')
+        .expect(200, done)
+    }),
 
     it('Should resolve and create a post route', (done) => {
       // Given
@@ -120,7 +121,7 @@ describe('Herbs2Rest - Generate Routes', () => {
         {
           name: 'lists',
           entity: entityTest,
-          post: { usecase: usecaseTest }
+          post: { usecase: usecaseTest, controller: defaultController }
         },
       ]
 
@@ -142,7 +143,7 @@ describe('Herbs2Rest - Generate Routes', () => {
         {
           name: 'lists',
           entity: entityTest,
-          put: { usecase: usecaseTest }
+          put: { usecase: usecaseTest, controller: defaultController }
         },
       ]
 
@@ -164,7 +165,7 @@ describe('Herbs2Rest - Generate Routes', () => {
         {
           name: 'lists',
           entity: entityTest,
-          delete: { usecase: usecaseTest }
+          delete: { usecase: usecaseTest, controller: defaultController }
         },
       ]
 

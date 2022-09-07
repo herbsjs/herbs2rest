@@ -1,5 +1,3 @@
-const defaultController = require('./defaultController')
-
 function generateRoutes(routes, app, endpointInfo = false) {
   // eslint-disable-next-line no-console
   function info(msg) { if (endpointInfo) console.info(msg) }
@@ -20,7 +18,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query }
         const usecase = route.getAll.usecase
-        const currentController = route.getAll.controller || defaultController
+        const currentController = route.getAll.controller
 
         await currentController(usecase, request, req.user, res, next)
       })
@@ -32,7 +30,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
         const usecase = route.getById.usecase
-        const currentController = route.getById.controller || defaultController
+        const currentController = route.getById.controller
 
         await currentController(usecase, request, req.user, res, next)
       })
@@ -44,7 +42,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
       app.post(endpoint, async (req, res, next) => {
         const request = { body: req.body }
         const usecase = route.post.usecase
-        const currentController = route.post.controller || defaultController
+        const currentController = route.post.controller
 
         await currentController(usecase, request, req.user, res, next)
       })
@@ -56,7 +54,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
       app.put(endpoint, async (req, res, next) => {
         const request = { body: req.body, params: req.params }
         const usecase = route.put.usecase
-        const currentController = route.put.controller || defaultController
+        const currentController = route.put.controller
 
         await currentController(usecase, request, req.user, res, next)
       })
@@ -68,7 +66,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
       app.delete(endpoint, async (req, res, next) => {
         const request = { params: req.params }
         const usecase = route.delete.usecase
-        const currentController = route.delete.controller || defaultController
+        const currentController = route.delete.controller
 
         await currentController(usecase, request, req.user, res, next)
       })
@@ -77,4 +75,3 @@ function generateRoutes(routes, app, endpointInfo = false) {
 }
 
 module.exports = generateRoutes
-module.exports.generateRoutes = generateRoutes

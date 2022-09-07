@@ -1,16 +1,21 @@
-function generateControllers(herbarium) {
+const defaultController = require('./defaultController')
+
+function generateControllers({ herbarium, controller = defaultController }) {
     const entities = findEntitiesAndGroups(herbarium)
 
-    const controllers = entities.map(entity => {
-        const ucList = findUsecases(herbarium, entity.id)
+    const controllers = entities.map(item => {
+        let entity = item.entity
+        if (typeof item.entity === 'string') entity = herbarium.entities.get(item.entity).entity
+        const usecases = findUsecases(herbarium, item.entity)
+        const resourceId = entity.schema.fields.find(f => f.options.isId)
         return {
-            entity: entity.id,
-            name: entity.group,
-            getAll: { usecase: ucList.getAll },
-            getById: { usecase: ucList.getById, id: 'ids' },
-            post: { usecase: ucList.post },
-            put: { usecase: ucList.put },
-            delete: { usecase: ucList.del }
+            entity: entity,
+            name: item.group,
+            getAll: { usecase: usecases.getAll, controller },
+            getById: { usecase: usecases.getById, controller, id: (resourceId?.name || 'id') },
+            post: { usecase: usecases.post, controller },
+            put: { usecase: usecases.put, controller },
+            delete: { usecase: usecases.del, controller }
         }
     })
     return controllers
@@ -18,7 +23,7 @@ function generateControllers(herbarium) {
 
 function findEntitiesAndGroups(herbarium) {
     const items = Array.from(herbarium.usecases.all.values()).map(usecaseItem =>
-        ({ id: usecaseItem.entity, group: usecaseItem.group })
+        ({ entity: usecaseItem.entity, group: usecaseItem.group })
     )
     const distinctItems = items.filter(({ entity, group }, index, self) =>
         self.findIndex(usecaseItem => usecaseItem.entity === entity && usecaseItem.group === group) === index
@@ -36,4 +41,4 @@ function findUsecases(herbarium, entity) {
     return { getAll, getById, post, put, del }
 }
 
-module.exports = {generateControllers}
+module.exports = generateControllers
