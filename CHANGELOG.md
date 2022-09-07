@@ -1,3 +1,15 @@
+# [3.2.0](https://github.com/herbsjs/herbs2rest/compare/v3.1.1...v3.2.0) (2022-09-07)
+
+
+### Bug Fixes
+
+* **package-lock.json:** sync with package.json ([6492c1a](https://github.com/herbsjs/herbs2rest/commit/6492c1aaaf7546f604fa8aa488898497f144fe17))
+
+
+### Features
+
+* **controller:** evolve herbs2rest for new cli project structure ([a6fdfb6](https://github.com/herbsjs/herbs2rest/commit/a6fdfb64befe9186223aaa89ff098e83e7bcb075))
+
 ## [3.1.1](https://github.com/herbsjs/herbs2rest/compare/v3.1.0...v3.1.1) (2022-08-21)
 
 
