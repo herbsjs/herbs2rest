@@ -33,7 +33,7 @@ function findEntitiesAndGroups(herbarium) {
 
 function findUsecases(herbarium, entity) {
     const usecases = herbarium.usecases
-    const getAll = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0].usecase
+    const getAll = usecases.findBy({ entity: entity, operation: herbarium.crud.readAll })[0].usecase
     const getById = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0].usecase
     const post = usecases.findBy({ entity: entity, operation: herbarium.crud.create })[0].usecase
     const put = usecases.findBy({ entity: entity, operation: herbarium.crud.update })[0].usecase
