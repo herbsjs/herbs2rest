@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/herbsjs/herbs2rest/compare/v3.2.0...v3.2.1) (2022-09-21)
+
+
+### Bug Fixes
+
+* 🐛 fixing the findUsecases function ([c335e8b](https://github.com/herbsjs/herbs2rest/commit/c335e8bb919e7045c8e2d564b26a00477a4b7bf3))
+
 # [3.2.0](https://github.com/herbsjs/herbs2rest/compare/v3.1.1...v3.2.0) (2022-09-07)
 
 
