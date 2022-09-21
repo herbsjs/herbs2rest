@@ -27,6 +27,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     })
 
     herbarium.usecases
+      .add(crudOperation('ReadAll'), 'ReadAllUsecase')
+      .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test })
+
+    herbarium.usecases
       .add(crudOperation('Read'), 'ReadUsecase')
       .metadata({ group: 'Test', operation: herbarium.crud.read, entity: Test })
 
