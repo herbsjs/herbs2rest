@@ -9,26 +9,23 @@ const generateRoutes = require('../src/generateRoutes')
 const generateControllers = require('../src/generateControllers')
 
 describe('Herbs2Rest - Generate Routes With Herbarium', () => {
+
+  const Test =
+  entity('Test', {
+    id: field(Number, { isId: true })
+  })
+
+  const crudOperation = (param) => () => usecase(`${param} Usecase`, {
+    request: {},
+    authorize: async _ => Ok(),
+    'Test step': step(_ => Ok())
+  })
+
   const usecaseTest = () => {
     herbarium.requireAll({})
 
-    const Test =
-      entity('Test', {
-        id: field(Number, { isId: true })
-      })
-
     herbarium.entities
       .add(Test, 'Test')
-
-    const crudOperation = (param) => () => usecase(`${param} Usecase`, {
-      request: {},
-      authorize: async _ => Ok(),
-      'Test step': step(_ => Ok())
-    })
-
-    herbarium.usecases
-      .add(crudOperation('ReadAll'), 'ReadAllUsecase')
-      .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test })
 
     herbarium.usecases
       .add(crudOperation('Read'), 'ReadUsecase')
@@ -49,10 +46,31 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
 
   usecaseTest()
 
-  it('Should resolve and create a get all route', (done) => {
+  it('Should return 404 error without a getAll route', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .get('/test')
+      .expect(404, done)
+  })
+
+  it('Should resolve and create a get all route after add inside Herbarium usecase list', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    herbarium.usecases
+    .add(crudOperation('ReadAll'), 'ReadAllUsecase')
+    .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test })
+
     const controllers = generateControllers({ herbarium })
 
     // When
