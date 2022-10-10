@@ -8,7 +8,7 @@ function generateControllers({ herbarium, controller = defaultController }) {
         if (typeof item.entity === 'string') entity = herbarium.entities.get(item.entity).entity
         const usecases = findUsecases(herbarium, item.entity)
         const resourceId = entity.schema.fields.find(f => f.options.isId)
-        let controllerList = {
+        let controllerInfos = {
             entity: entity,
             name: item.group,
             getAll: usecases.getAll ? { usecase: usecases.getAll, controller } : undefined,
@@ -18,13 +18,13 @@ function generateControllers({ herbarium, controller = defaultController }) {
             delete: usecases.del ? { usecase: usecases.del, controller } : undefined
         }
 
-        Object.keys(controllerList).forEach(key => {
-            if (controllerList[key] === undefined) {
-                delete controllerList[key];
+        Object.keys(controllerInfos).forEach(key => {
+            if (controllerInfos[key] === undefined) {
+                delete controllerInfos[key]
             }
         })
 
-        return controllerList
+        return controllerInfos
 
     })
     return controllers
