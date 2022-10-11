@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/herbsjs/herbs2rest/compare/v3.2.1...v3.2.2) (2022-10-11)
+
+
+### Bug Fixes
+
+* remove from controller list if a type of usecase is not registered inside herbarium ([d58ef7f](https://github.com/herbsjs/herbs2rest/commit/d58ef7fec98f2ee3092e628e6aa890739ed558e2)), closes [#45](https://github.com/herbsjs/herbs2rest/issues/45)
+
 ## [3.2.1](https://github.com/herbsjs/herbs2rest/compare/v3.2.0...v3.2.1) (2022-09-21)
 
 
