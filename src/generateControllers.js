@@ -11,11 +11,11 @@ function generateControllers({ herbarium, controller = defaultController }) {
         let controllerInfos = {
             entity: entity,
             name: item.group,
-            getAll: usecases.getAll ? { usecase: usecases.getAll, controller } : undefined,
-            getById: usecases.getById ? { usecase: usecases.getById, controller, id: (resourceId?.name || 'id') } : undefined,
-            post: usecases.post ? { usecase: usecases.post, controller } : undefined,
-            put: usecases.put ? { usecase: usecases.put, controller } : undefined,
-            delete: usecases.del ? { usecase: usecases.del, controller } : undefined
+            getAll: usecases.getAll ? { usecase: usecases.getAll.usecase, controller, REST: usecases.getAll.REST } : undefined,
+            getById: usecases.getById ? { usecase: usecases.getById.usecase, controller, REST: usecases.getById.REST, id: (resourceId?.name || 'id') } : undefined,
+            post: usecases.post ? { usecase: usecases.post.usecase, controller, REST: usecases.post.REST } : undefined,
+            put: usecases.put ? { usecase: usecases.put.usecase, controller, REST: usecases.put.REST } : undefined,
+            delete: usecases.del ? { usecase: usecases.del.usecase, controller, REST: usecases.del.REST } : undefined
         }
 
         Object.keys(controllerInfos).forEach(key => {
@@ -42,11 +42,11 @@ function findEntitiesAndGroups(herbarium) {
 
 function findUsecases(herbarium, entity) {
     const usecases = herbarium.usecases
-    const getAll = usecases.findBy({ entity: entity, operation: herbarium.crud.readAll })[0]?.usecase
-    const getById = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0]?.usecase
-    const post = usecases.findBy({ entity: entity, operation: herbarium.crud.create })[0]?.usecase
-    const put = usecases.findBy({ entity: entity, operation: herbarium.crud.update })[0]?.usecase
-    const del = usecases.findBy({ entity: entity, operation: herbarium.crud.delete })[0]?.usecase
+    const getAll = usecases.findBy({ entity: entity, operation: herbarium.crud.readAll })[0]
+    const getById = usecases.findBy({ entity: entity, operation: herbarium.crud.read })[0]
+    const post = usecases.findBy({ entity: entity, operation: herbarium.crud.create })[0]
+    const put = usecases.findBy({ entity: entity, operation: herbarium.crud.update })[0]
+    const del = usecases.findBy({ entity: entity, operation: herbarium.crud.delete })[0]
     return { getAll, getById, post, put, del }
 }
 

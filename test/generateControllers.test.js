@@ -62,23 +62,27 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       .expect(404, done)
   })
 
-  it('Should resolve and create a get all route after add inside Herbarium usecase list', (done) => {
+  it('Should resolve and create a custom get all route after add inside Herbarium usecase list', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
 
     herbarium.usecases
     .add(crudOperation('ReadAll'), 'ReadAllUsecase')
-    .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test })
+    .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test, REST: {
+      path: 'customGetAllRoute'
+    } })
 
     const controllers = generateControllers({ herbarium })
 
     // When
     generateRoutes(controllers, routes, true)
 
+    console.log(routes.stack)
+
     // Then
     request(app.use(routes))
-      .get('/test')
+      .get('/customGetAllRoute')
       .expect(200, done)
   })
 

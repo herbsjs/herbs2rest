@@ -13,7 +13,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getAll) {
-      const endpoint = `/${route.name}`
+      const endpoint = `/${route.getAll.REST?.path || route.name}/`
       info(`    GET ${endpoint} -> ${route.getAll.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query }
@@ -25,7 +25,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getById) {
-      const endpoint = `/${route.name}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
+      const endpoint = `/${route.getById.REST?.path || route.name}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
       info(`    GET ${endpoint} -> ${route.getById.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
@@ -37,7 +37,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.post) {
-      const endpoint = `/${route.name}`
+      const endpoint = `/${route.post.REST?.path || route.name}`
       info(`    POST ${endpoint} -> ${route.post.usecase().description}`)
       app.post(endpoint, async (req, res, next) => {
         const request = { body: req.body }
@@ -49,7 +49,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.put) {
-      const endpoint = `/${route.name}/:${route.put.id || idFieldName || 'id'}`
+      const endpoint = `/${route.put.REST?.path || route.name}/:${route.put.id || idFieldName || 'id'}`
       info(`    PUT ${endpoint} -> ${route.put.usecase().description}`)
       app.put(endpoint, async (req, res, next) => {
         const request = { body: req.body, params: req.params }
@@ -61,7 +61,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.delete) {
-      const endpoint = `/${route.name}/:${route.delete.id || idFieldName || 'id'}`
+      const endpoint = `/${route.delete.REST?.path || route.name}/:${route.delete.id || idFieldName || 'id'}`
       info(`    DELETE ${endpoint} -> ${route.delete.usecase().description}`)
       app.delete(endpoint, async (req, res, next) => {
         const request = { params: req.params }
