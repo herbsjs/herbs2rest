@@ -15,7 +15,10 @@ function generateControllers({ herbarium, controller = defaultController }) {
             getById: usecases.getById ? { usecase: usecases.getById.usecase, controller, REST: usecases.getById.REST, id: (resourceId?.name || 'id') } : undefined,
             post: usecases.post ? { usecase: usecases.post.usecase, controller, REST: usecases.post.REST } : undefined,
             put: usecases.put ? { usecase: usecases.put.usecase, controller, REST: usecases.put.REST } : undefined,
-            delete: usecases.del ? { usecase: usecases.del.usecase, controller, REST: usecases.del.REST } : undefined
+            delete: usecases.del ? { usecase: usecases.del.usecase, controller, REST: usecases.del.REST } : undefined,
+            other: usecases.other.length ? usecases.other.map((usecase) => {
+                return { usecase: usecase.usecase, controller, REST: usecase.REST }
+            }) : undefined
         }
 
         Object.keys(controllerInfos).forEach(key => {
@@ -47,7 +50,8 @@ function findUsecases(herbarium, entity) {
     const post = usecases.findBy({ entity: entity, operation: herbarium.crud.create })[0]
     const put = usecases.findBy({ entity: entity, operation: herbarium.crud.update })[0]
     const del = usecases.findBy({ entity: entity, operation: herbarium.crud.delete })[0]
-    return { getAll, getById, post, put, del }
+    const other = usecases.findBy({ entity: entity, operation: herbarium.crud.other })
+    return { getAll, getById, post, put, del, other }
 }
 
 module.exports = generateControllers

@@ -78,8 +78,6 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     // When
     generateRoutes(controllers, routes, true)
 
-    console.log(routes.stack)
-
     // Then
     request(app.use(routes))
       .get('/customGetAllRoute')
