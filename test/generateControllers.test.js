@@ -11,9 +11,9 @@ const generateControllers = require('../src/generateControllers')
 describe('Herbs2Rest - Generate Routes With Herbarium', () => {
 
   const Test =
-  entity('Test', {
-    id: field(Number, { isId: true })
-  })
+    entity('Test', {
+      id: field(Number, { isId: true })
+    })
 
   const crudOperation = (param) => () => usecase(`${param} Usecase`, {
     request: {},
@@ -42,6 +42,10 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     herbarium.usecases
       .add(crudOperation('Delete'), 'DeleteUsecase')
       .metadata({ group: 'Test', operation: herbarium.crud.delete, entity: Test })
+
+    herbarium.usecases
+      .add(crudOperation('Other'), 'ReadAllCustomUsecase')
+      .metadata({ group: 'Test', operation: herbarium.crud.other, entity: Test })
   }
 
   usecaseTest()
@@ -62,16 +66,14 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       .expect(404, done)
   })
 
-  it('Should resolve and create a custom get all route after add inside Herbarium usecase list', (done) => {
+  it('Should resolve and create a get all route after add inside Herbarium usecase list', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
 
     herbarium.usecases
-    .add(crudOperation('ReadAll'), 'ReadAllUsecase')
-    .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test, REST: {
-      path: 'customGetAllRoute'
-    } })
+      .add(crudOperation('ReadAll'), 'ReadAllUsecase')
+      .metadata({ group: 'Test', operation: herbarium.crud.readAll, entity: Test })
 
     const controllers = generateControllers({ herbarium })
 
@@ -80,7 +82,32 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
 
     // Then
     request(app.use(routes))
-      .get('/customGetAllRoute')
+      .get('/test')
+      .expect(200, done)
+  })
+
+  it.only('Should resolve and create a custom get all route after add inside Herbarium usecase list', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    herbarium.usecases
+      .add(crudOperation('Other'), 'ReadAllCustomUsecase')
+      .metadata({
+        group: 'Test', operation: herbarium.crud.other, entity: Test,
+        REST: {
+          path: '/customgetallroute', verb: "GET"
+        }
+      })
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .get('/customgetallroute')
       .expect(200, done)
   })
 

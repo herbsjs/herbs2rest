@@ -13,11 +13,11 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     const customEndpoints = {
-      getAll: route.getAll.REST?.path,
-      getById: route.getById.REST?.path ? `${route.getById.REST?.path}/:${route.getById.id || idFieldName || route.idEntity || 'id'}` : undefined,
-      post: route.post.REST?.path,
-      put: route.put.REST?.path ? `${route.put.REST?.path}/:${route.put.id || idFieldName || 'id'}` : undefined,
-      delete: route.delete.REST?.path ? `${route.delete.REST?.path}/:${route.delete.id || idFieldName || 'id'}` : undefined,
+      getAll: route.getAll?.REST?.path,
+      getById: route.getById?.REST?.path ? `${route.getById.REST?.path}/:${route.getById.id || idFieldName || route.idEntity || 'id'}` : undefined,
+      post: route.post?.REST?.path,
+      put: route.put?.REST?.path ? `${route.put.REST?.path}/:${route.put.id || idFieldName || 'id'}` : undefined,
+      delete: route.delete?.REST?.path ? `${route.delete.REST?.path}/:${route.delete.id || idFieldName || 'id'}` : undefined,
     }
 
     if (route.getAll) {
