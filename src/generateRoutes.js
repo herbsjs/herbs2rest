@@ -84,12 +84,13 @@ function generateRoutes(routes, app, endpointInfo = false) {
       if (other.REST) {
         const endpoint = `${other.REST.path}`
         const verb = other.REST.verb.toLowerCase()
-        info(`    OTHER ${endpoint} -> ${other.usecase().description}`)
+        info(`    OTHER ${other.REST.verb} ${endpoint} -> ${other.usecase().description}`)
         app[verb](endpoint, async (req, res, next) => {
+          const request = { body: req.body, query: req.query, params: req.params }
           const usecase = other.usecase
           const currentController = other.controller
 
-          await currentController(usecase, _, req.user, res, next)
+          await currentController(usecase, request, req.user, res, next)
         })
       }
     })

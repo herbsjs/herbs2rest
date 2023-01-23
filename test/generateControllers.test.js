@@ -86,7 +86,7 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it.only('Should resolve and create a custom get all route after add inside Herbarium usecase list', (done) => {
+  it('Should resolve and create a custom get all route after add inside Herbarium usecase list', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
