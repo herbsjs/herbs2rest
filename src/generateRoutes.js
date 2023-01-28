@@ -81,7 +81,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.other) route.other.forEach((other) => {
-      if (other.REST) {
+      if (other.REST?.verb && other.REST?.path) {
         const endpoint = `${other.REST.path}`
         const verb = other.REST.verb.toLowerCase()
         info(`    OTHER ${other.REST.verb} ${endpoint} -> ${other.usecase().description}`)
