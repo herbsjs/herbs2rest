@@ -48,7 +48,7 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       .metadata({ group: 'Test', operation: herbarium.crud.other, entity: Test })
   }
 
-  usecaseTest()
+  beforeEach(() => usecaseTest())
 
   it('Should return 404 error without a getAll route', (done) => {
     // Given
@@ -84,98 +84,6 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
     request(app.use(routes))
       .get('/test')
       .expect(200, done)
-  })
-
-  it('Should resolve and create a custom get all route after add inside Herbarium usecase list', (done) => {
-    // Given
-    const app = express()
-    const routes = new express.Router()
-
-    herbarium.usecases
-      .add(crudOperation('Other'), 'ReadAllCustomUsecase')
-      .metadata({
-        group: 'Test', operation: herbarium.crud.other, entity: Test,
-        REST: {
-          path: '/customgetallroute', verb: "GET"
-        }
-      })
-
-    const controllers = generateControllers({ herbarium })
-
-    // When
-    generateRoutes(controllers, routes, true)
-
-    // Then
-    request(app.use(routes))
-      .get('/customgetallroute')
-      .expect(200, done)
-  })
-
-  it('Must create multiple endpoints of type other after add inside Herbarium usecase list', async () => {
-    // Given
-    const app = express()
-    const routes = new express.Router()
-
-    herbarium.usecases
-      .add(crudOperation('Other'), 'ReadAllCustomUsecase')
-      .metadata({
-        group: 'Test', operation: herbarium.crud.other, entity: Test,
-        REST: {
-          path: '/customgetallroute', verb: "GET"
-        }
-      })
-
-    herbarium.usecases
-      .add(crudOperation('Other'), 'DeleteAllCustomUsecase')
-      .metadata({
-        group: 'Test', operation: herbarium.crud.other, entity: Test,
-        REST: {
-          path: '/customdeleteall', verb: "DELETE"
-        }
-      })
-
-    const controllers = generateControllers({ herbarium })
-
-    // When
-    generateRoutes(controllers, routes, true)
-
-    // Then
-    await request(app.use(routes))
-      .get('/customgetallroute')
-      .then((res) => {
-        assert.equal(res.status, 200)
-      })
-
-    await request(app.use(routes))
-      .delete('/customdeleteall')
-      .then((res) => {
-        assert.equal(res.status, 200)
-      })
-  })
-
-  it('Should not create a custom get all route without verb', (done) => {
-    // Given
-    const app = express()
-    const routes = new express.Router()
-
-    herbarium.usecases
-      .add(crudOperation('Other'), 'ReadAllCustomUsecase')
-      .metadata({
-        group: 'Test', operation: herbarium.crud.other, entity: Test,
-        REST: {
-          path: '/customgetallroute'
-        }
-      })
-
-    const controllers = generateControllers({ herbarium })
-
-    // When
-    generateRoutes(controllers, routes, true)
-
-    // Then
-    request(app.use(routes))
-      .get('/customgetallroute')
-      .expect(404, done)
   })
 
   it('Should resolve and create a get by id route', (done) => {
@@ -240,5 +148,175 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
 
   it('Should throw a JavascriptError if controllersList is null', () => {
     assert.rejects(() => generateRoutes(null, routes))
+  })
+})
+
+describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
+  const Test =
+    entity('Test', {
+      id: field(Number, { isId: true })
+    })
+
+  const crudOperation = (param) => () => usecase(`${param} Usecase`, {
+    request: {},
+    authorize: async _ => Ok(),
+    'Test step': step(_ => Ok())
+  })
+
+  const usecaseTest = () => {
+    herbarium.requireAll({})
+
+    herbarium.entities
+      .add(Test, 'Test')
+
+    herbarium.usecases
+      .add(crudOperation('Read'), 'ReadUsecase')
+      .metadata({ group: 'Test', operation: herbarium.crud.read, entity: Test })
+
+    herbarium.usecases
+      .add(crudOperation('Create'), 'CreateUsecase')
+      .metadata({ group: 'Test', operation: herbarium.crud.create, entity: Test })
+
+    herbarium.usecases
+      .add(crudOperation('Update'), 'UpdateUsecase')
+      .metadata({
+        group: 'Test', operation: herbarium.crud.update, entity: Test, REST: {
+          path: '/customput'
+        }
+      })
+
+    herbarium.usecases
+      .add(crudOperation('Delete'), 'DeleteUsecase')
+      .metadata({
+        group: 'Test', operation: herbarium.crud.delete, entity: Test,
+        REST: {
+          path: '/customdelete'
+        }
+      })
+  }
+
+  beforeEach(() => usecaseTest())
+
+  it('Should resolve and create a custom get by id route after add inside Herbarium usecase list', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    herbarium.usecases
+      .add(crudOperation('Read'), 'ReadUsecase')
+      .metadata({
+        group: 'Test', operation: herbarium.crud.read, entity: Test,
+        REST: {
+          path: '/customgetbyid',
+          verb: 'GET'
+        }
+      })
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .get('/test/customgetbyid/1')
+      .expect(200, done)
+  })
+
+  it('Should resolve and create a custom post route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .post('/test')
+      .expect(200, done)
+  }),
+
+    it('Should resolve and create a custom get all route', (done) => {
+      // Given
+      const app = express()
+      const routes = new express.Router()
+
+      herbarium.usecases
+        .add(crudOperation('ReadAll'), 'ReadUsecase')
+        .metadata({
+          group: 'Test', operation: herbarium.crud.readAll, entity: Test,
+          REST: {
+            path: '/customget',
+          }
+        })
+
+      const controllers = generateControllers({ herbarium })
+
+      // When
+      generateRoutes(controllers, routes, true)
+
+      // Then
+      request(app.use(routes))
+        .get('/test/customget')
+        .expect(200, done)
+    })
+
+  it('Should resolve and create a custom put route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .put('/test/customput/1')
+      .expect(200, done)
+  })
+
+  it('Should resolve and create a custom delete route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .delete('/test/customdelete/1')
+      .expect(200, done)
+  })
+
+  it('Should resolve and create a custom other route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    herbarium.usecases
+      .add(crudOperation('Other'), 'OtherCustomUsecase')
+      .metadata({
+        group: 'Test', operation: herbarium.crud.other, entity: Test,
+        REST: {
+          path: '/customother', resourceName: 'customTest', verb: 'GET'
+        }
+      })
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .get('/test/customother')
+      .expect(200, done)
   })
 })

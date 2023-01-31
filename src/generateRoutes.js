@@ -16,12 +16,22 @@ function generateRoutes(routes, app, endpointInfo = false) {
       getAll: route.getAll?.REST?.path,
       getById: route.getById?.REST?.path ? `${route.getById.REST?.path}/:${route.getById.id || idFieldName || route.idEntity || 'id'}` : undefined,
       post: route.post?.REST?.path,
-      put: route.put?.REST?.path ? `${route.put.REST?.path}/:${route.put.id || idFieldName || 'id'}` : undefined,
+      put: route.put?.REST?.path ? `${route.put.REST?.path}` : undefined,
       delete: route.delete?.REST?.path ? `${route.delete.REST?.path}/:${route.delete.id || idFieldName || 'id'}` : undefined,
     }
 
+    const resourceName = {
+      getAll: route.getAll?.REST?.resourceName || route.name,
+      getById: route.getById?.REST?.resourceName || route.name,
+      post: route.post?.REST?.resourceName || route.name,
+      put: route.put?.REST?.resourceName || route.name,
+      delete: route.delete?.REST?.resourceName || route.name,
+    }
+
     if (route.getAll) {
-      const endpoint = customEndpoints.getAll || `/${route.name}/`
+      const endpoint = customEndpoints.getAll
+        ? `/${resourceName.getAll}` + customEndpoints.getAll
+        : `/${resourceName.getAll}/`
       info(`    GET ${endpoint} -> ${route.getAll.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query }
@@ -33,7 +43,9 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getById) {
-      const endpoint = customEndpoints.getById ? customEndpoints.getById : `/${route.name}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
+      const endpoint = customEndpoints.getById
+        ? `/${resourceName.getById}` + customEndpoints.getById
+        : `/${resourceName.getById}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
       info(`    GET ${endpoint} -> ${route.getById.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
@@ -45,7 +57,9 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.post) {
-      const endpoint = customEndpoints.post || `/${route.name}`
+      const endpoint = customEndpoints.post
+        ? `/${resourceName.post}` + customEndpoints.post
+        : `/${resourceName.post}`
       info(`    POST ${endpoint} -> ${route.post.usecase().description}`)
       app.post(endpoint, async (req, res, next) => {
         const request = { body: req.body }
@@ -57,7 +71,9 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.put) {
-      const endpoint = customEndpoints.put || `/${route.name}/:${route.put.id || idFieldName || 'id'}`
+      const endpoint = customEndpoints.put
+        ? `/${resourceName.put}` + customEndpoints.put + `/:${route.put.id || idFieldName || 'id'}`
+        : `/${resourceName.put}/:${route.put.id || idFieldName || 'id'}`
       info(`    PUT ${endpoint} -> ${route.put.usecase().description}`)
       app.put(endpoint, async (req, res, next) => {
         const request = { body: req.body, params: req.params }
@@ -69,7 +85,9 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.delete) {
-      const endpoint = customEndpoints.delete || `/${route.name}/:${route.delete.id || idFieldName || 'id'}`
+      const endpoint = customEndpoints.delete
+        ? `/${resourceName.delete}` + customEndpoints.delete
+        : `/${resourceName.delete}/:${route.delete.id || idFieldName || 'id'}`
       info(`    DELETE ${endpoint} -> ${route.delete.usecase().description}`)
       app.delete(endpoint, async (req, res, next) => {
         const request = { params: req.params }
@@ -82,9 +100,10 @@ function generateRoutes(routes, app, endpointInfo = false) {
 
     if (route.other) route.other.forEach((other) => {
       if (other.REST?.verb && other.REST?.path) {
-        const endpoint = `${other.REST.path}`
+        const resourceName = other.REST?.resourceName || route.name
+        const endpoint = `/${resourceName}${other.REST.path}`
         const verb = other.REST.verb.toLowerCase()
-        info(`    OTHER ${other.REST.verb} ${endpoint} -> ${other.usecase().description}`)
+        info(`    ${other.REST.verb} ${endpoint} -> ${other.usecase().description}`)
         app[verb](endpoint, async (req, res, next) => {
           const request = { body: req.body, query: req.query, params: req.params }
           const usecase = other.usecase
