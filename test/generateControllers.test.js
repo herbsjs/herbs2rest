@@ -305,7 +305,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .metadata({
         group: 'Test', operation: herbarium.crud.other, entity: Test,
         REST: {
-          path: '/customother', resourceName: 'customTest', verb: 'GET'
+          path: '/customother', resourceName: 'customtest', verb: 'GET'
         }
       })
 
@@ -316,7 +316,32 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
 
     // Then
     request(app.use(routes))
-      .get('/test/customother')
+      .get('/customtest/customother')
+      .expect(200, done)
+  })
+
+  it('Should resolve and create a custom other route with default verb', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
+
+    herbarium.usecases
+      .add(crudOperation('Other'), 'OtherCustomUsecase')
+      .metadata({
+        group: 'Test', operation: herbarium.crud.other, entity: Test,
+        REST: {
+          path: '/defaultother', resourceName: 'customtest',
+        }
+      })
+
+    const controllers = generateControllers({ herbarium })
+
+    // When
+    generateRoutes(controllers, routes, true)
+
+    // Then
+    request(app.use(routes))
+      .post('/customtest/defaultother')
       .expect(200, done)
   })
 })

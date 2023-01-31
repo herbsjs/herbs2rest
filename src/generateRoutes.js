@@ -99,10 +99,10 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.other) route.other.forEach((other) => {
-      if (other.REST?.verb && other.REST?.path) {
+      if (other.REST?.path) {
         const resourceName = other.REST?.resourceName || route.name
         const endpoint = `/${resourceName}${other.REST.path}`
-        const verb = other.REST.verb.toLowerCase()
+        const verb = other.REST?.verb?.toLowerCase() || 'post'
         info(`    ${other.REST.verb} ${endpoint} -> ${other.usecase().description}`)
         app[verb](endpoint, async (req, res, next) => {
           const request = { body: req.body, query: req.query, params: req.params }
