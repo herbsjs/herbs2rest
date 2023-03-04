@@ -29,9 +29,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getAll) {
-      const endpoint = customEndpoints.getAll
-        ? `/${resourceName.getAll}` + customEndpoints.getAll
-        : `/${resourceName.getAll}/`
+      const endpoint = customEndpoints.getAll || `/${resourceName.getAll}/`
       info(`    GET ${endpoint} -> ${route.getAll.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query }
@@ -43,9 +41,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getById) {
-      const endpoint = customEndpoints.getById
-        ? `/${resourceName.getById}` + customEndpoints.getById
-        : `/${resourceName.getById}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
+      const endpoint = customEndpoints.getById || `/${resourceName.getById}/:${route.getById.id || idFieldName || route.idEntity || 'id'}`
       info(`    GET ${endpoint} -> ${route.getById.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query, params: req.params }
@@ -57,9 +53,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.post) {
-      const endpoint = customEndpoints.post
-        ? `/${resourceName.post}` + customEndpoints.post
-        : `/${resourceName.post}`
+      const endpoint = customEndpoints.post || `/${resourceName.post}`
       info(`    POST ${endpoint} -> ${route.post.usecase().description}`)
       app.post(endpoint, async (req, res, next) => {
         const request = { body: req.body }
@@ -71,9 +65,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.put) {
-      const endpoint = customEndpoints.put
-        ? `/${resourceName.put}` + customEndpoints.put + `/:${route.put.id || idFieldName || 'id'}`
-        : `/${resourceName.put}/:${route.put.id || idFieldName || 'id'}`
+      const endpoint = customEndpoints.put || `/${resourceName.put}/:${route.put.id || idFieldName || 'id'}`
       info(`    PUT ${endpoint} -> ${route.put.usecase().description}`)
       app.put(endpoint, async (req, res, next) => {
         const request = { body: req.body, params: req.params }
@@ -85,9 +77,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.delete) {
-      const endpoint = customEndpoints.delete
-        ? `/${resourceName.delete}` + customEndpoints.delete
-        : `/${resourceName.delete}/:${route.delete.id || idFieldName || 'id'}`
+      const endpoint = customEndpoints.delete || `/${resourceName.delete}/:${route.delete.id || idFieldName || 'id'}`
       info(`    DELETE ${endpoint} -> ${route.delete.usecase().description}`)
       app.delete(endpoint, async (req, res, next) => {
         const request = { params: req.params }
@@ -99,11 +89,10 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.other) route.other.forEach((other) => {
-      if (other.REST?.path) {
-        const resourceName = other.REST?.resourceName || route.name
-        const endpoint = `/${resourceName}${other.REST.path}`
+      if (other.REST?.path || other.REST?.resourceName) {
+        const endpoint = other.REST?.path || `/${other.REST?.resourceName}`
         const verb = other.REST?.verb?.toLowerCase() || 'post'
-        info(`    ${other.REST.verb} ${endpoint} -> ${other.usecase().description}`)
+        info(`    ${verb.toUpperCase()} ${endpoint} -> ${other.usecase().description}`)
         app[verb](endpoint, async (req, res, next) => {
           const request = { body: req.body, query: req.query, params: req.params }
           const usecase = other.usecase
