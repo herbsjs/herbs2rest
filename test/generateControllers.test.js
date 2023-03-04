@@ -174,7 +174,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .metadata({
         group: 'Test', operation: herbarium.crud.read, entity: Test,
         REST: {
-          path: '/customgetbyid',
+          path: '/customgetbyid/:id',
         }
       })
 
@@ -204,7 +204,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .metadata({
         group: 'Test', operation: herbarium.crud.delete, entity: Test,
         REST: {
-          path: '/customdelete'
+          path: '/customdeletebyid/:id'
         }
       })
   }
@@ -286,7 +286,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
 
     // Then
     request(app.use(routes))
-      .delete('/customdelete/1')
+      .delete('/customdeletebyid/1')
       .expect(200, done)
   })
 

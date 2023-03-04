@@ -14,10 +14,10 @@ function generateRoutes(routes, app, endpointInfo = false) {
 
     const customEndpoints = {
       getAll: route.getAll?.REST?.path,
-      getById: route.getById?.REST?.path ? `${route.getById.REST?.path}/:${route.getById.id || idFieldName || route.idEntity || 'id'}` : undefined,
+      getById: route.getById?.REST?.path,
       post: route.post?.REST?.path,
-      put: route.put?.REST?.path ? `${route.put.REST?.path}` : undefined,
-      delete: route.delete?.REST?.path ? `${route.delete.REST?.path}/:${route.delete.id || idFieldName || 'id'}` : undefined,
+      put: route.put?.REST?.path,
+      delete: route.delete?.REST?.path,
     }
 
     const resourceName = {
@@ -29,7 +29,7 @@ function generateRoutes(routes, app, endpointInfo = false) {
     }
 
     if (route.getAll) {
-      const endpoint = customEndpoints.getAll || `/${resourceName.getAll}/`
+      const endpoint = customEndpoints.getAll || `/${resourceName.getAll}`
       info(`    GET ${endpoint} -> ${route.getAll.usecase().description}`)
       app.get(endpoint, async (req, res, next) => {
         const request = { query: req.query }
