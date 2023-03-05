@@ -48,7 +48,7 @@ describe('Herbs2Rest - Generate Routes With Herbarium', () => {
       .metadata({ group: 'Test', operation: herbarium.crud.other, entity: Test })
   }
 
-  beforeEach(() => usecaseTest())
+  before(() => usecaseTest())
 
   it('Should return 404 error without a getAll route', (done) => {
     // Given
@@ -209,9 +209,9 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       })
   }
 
-  beforeEach(() => usecaseTest())
+  before(() => usecaseTest())
 
-  it('Should resolve and create a custom get by id route after add inside Herbarium usecase list', (done) => {
+  it('getById - should ignore the conventions and use the given path', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -227,7 +227,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom post route', (done) => {
+  it('post - should ignore the conventions and use the given path', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -242,7 +242,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom get all route', (done) => {
+  it('getAll - should ignore the conventions and use the given path', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -258,7 +258,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom put route', (done) => {
+  it('put - should ignore the conventions and use the given path', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -274,7 +274,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom delete route', (done) => {
+  it('delete - should ignore the conventions and use the given path', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -290,7 +290,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom other route', (done) => {
+  it('other - should ignore the conventions and use the given path and verb', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -315,7 +315,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom other route with default verb', (done) => {
+  it('other - should ignore the conventions and use the given path and default verb', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -340,7 +340,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom other route with resourceName', (done) => {
+  it('other - should not ignore the conventions and use the resourceName andd default verb', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
@@ -365,7 +365,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
       .expect(200, done)
   })
 
-  it('Should resolve and create a custom other route without a group', (done) => {
+  it('other - should ignore the conventions and group and use the given path', (done) => {
     // Given
     const app = express()
     const routes = new express.Router()
