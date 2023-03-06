@@ -1,3 +1,10 @@
+## [3.2.4](https://github.com/herbsjs/herbs2rest/compare/v3.2.3...v3.2.4) (2023-03-06)
+
+
+### Bug Fixes
+
+* **package.json:** up herbs in peerDependencies ([8fc22f0](https://github.com/herbsjs/herbs2rest/commit/8fc22f05d76a7b92cbafe67438acb5e591e566c9))
+
 ## [3.2.3](https://github.com/herbsjs/herbs2rest/compare/v3.2.2...v3.2.3) (2023-03-06)
 
 
