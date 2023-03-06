@@ -1,3 +1,10 @@
+## [3.2.3](https://github.com/herbsjs/herbs2rest/compare/v3.2.2...v3.2.3) (2023-03-06)
+
+
+### Bug Fixes
+
+* **package.json:** up herbs version ([a3403aa](https://github.com/herbsjs/herbs2rest/commit/a3403aa5ea67eb3517fd7a1f4d32f75a27bcc37d))
+
 ## [3.2.2](https://github.com/herbsjs/herbs2rest/compare/v3.2.1...v3.2.2) (2022-10-11)
 
 
