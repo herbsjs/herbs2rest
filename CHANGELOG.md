@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/herbsjs/herbs2rest/compare/v3.2.4...v4.0.0) (2023-03-07)
+
+
+### Documentation
+
+* update docs ([4d2e0f2](https://github.com/herbsjs/herbs2rest/commit/4d2e0f2af3ad9cbb7ad781ba8e8090e15e08288a))
+
+
+### BREAKING CHANGES
+
+* upgrade buchu to 2.0
+
 ## [3.2.4](https://github.com/herbsjs/herbs2rest/compare/v3.2.3...v3.2.4) (2023-03-06)
 
 
