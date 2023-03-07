@@ -3,7 +3,6 @@
 # herbs2rest
 Create a REST API based on herbs entities ([gotu](https://github.com/herbsjs/gotu)) and usecases ([buchu](https://github.com/herbsjs/buchu)).
 
-
 ### Installing
 ```
     $ npm install @herbsjs/herbs2rest
