@@ -4,8 +4,8 @@ const request = require('supertest')
 const { Ok, step, usecase, entity, id, field } = require('@herbsjs/herbs')
 const express = require('express')
 
-const generateRoutes = require('../src/generateRoutes')
-const defaultController = require('../src/defaultController')
+const generateRoutes = require('../../src/legacy/generateRoutes')
+const defaultController = require('../../src/defaultController')
 
 describe('Herbs2Rest - Generate Routes', () => {
   const entityTest = entity('test entity', {

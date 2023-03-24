@@ -1,4 +1,4 @@
-const defaultController = require('./defaultController')
+const defaultController = require('../defaultController')
 
 function generateControllers({ herbarium, controller = defaultController }) {
     const entities = findEntitiesAndGroups(herbarium)

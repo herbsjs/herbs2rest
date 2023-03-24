@@ -22,7 +22,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
-    "@herbsjs/herbarium": "^1.4.0",
+    "@herbsjs/herbarium": "^1.5.0",
     "@herbsjs/herbs": "^2.0.0",
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/commit-analyzer": "^9.0.2",

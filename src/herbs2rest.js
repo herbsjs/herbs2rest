@@ -1,5 +1,6 @@
 module.exports = {
-  generateRoutes: require('./generateRoutes'),
-  generateControllers: require('./generateControllers'),
+  generateRoutes: require('./legacy/generateRoutes'),
+  generateControllers: require('./legacy/generateControllers'),
   req2request: require('./helpers/req2request'),
+  populateMetadata: require('./populateMetadata'),
 }
