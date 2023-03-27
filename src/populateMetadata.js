@@ -5,7 +5,21 @@ const defaultConvention = {
 
     controller: defaultController,
 
-    crudToVerb(crud) {
+    parametersHandler: (req, parameters) => {
+        const result = {}
+
+        for (let source in parameters) {
+            for (const param in parameters[source]) {
+                result[param] = req[source][param]
+            }
+        }
+
+        return result
+    },
+
+    userHandler: (request) => request.user,
+
+    operationToMethod({ operation }) {
         const fromTo = {
             [herbarium.crud.read]: 'GET',
             [herbarium.crud.readAll]: 'GET',
@@ -13,10 +27,10 @@ const defaultConvention = {
             [herbarium.crud.update]: 'PUT',
             [herbarium.crud.delete]: 'DELETE',
         }
-        return fromTo[crud] || 'POST'
+        return fromTo[operation] || 'POST'
     },
 
-    toResourceName(entity, group) {
+    toResourceName({ entity, group }) {
         const entityName = entity?.name
         const groupName = group
         let resourceName = entityName || groupName
@@ -40,32 +54,32 @@ const defaultConvention = {
         return name + 's'
     },
 
-    crudToPath(crud, resource) {
+    methodToPath({ method, operation, resource, parameters }) {
         if (!resource) return
 
-        switch (crud) {
-            case herbarium.crud.read:
-                return `/${resource}/:id`
-            case herbarium.crud.readAll:
+        const params = Object.keys(parameters?.params || {})
+        const template = params.length > 0 ? `/:${params.join('/:')}` : ''
+
+        // convetion based on HTTP method
+        switch (method) {
+            case 'GET':
+                if (operation === herbarium.crud.readAll) return `/${resource}`
+                return `/${resource}${template}`
+            case 'POST':
                 return `/${resource}`
-            case herbarium.crud.create:
-                return `/${resource}`
-            case herbarium.crud.update:
-                return `/${resource}/:id`
-            case herbarium.crud.delete:
-                return `/${resource}/:id`
+            case 'PUT':
+                return `/${resource}${template}`
+            case 'DELETE':
+                return `/${resource}${template}`
             default:
                 return `/${resource}`
         }
     },
 
-    toRequestParams(verb, entity, params) {
-
-        // the params comes from the use case 'request' property
+    requestToParameters({ method, entity, request }) {
         // the entity here is just to find which param is a ID, since this metadata is not in the request
-        // the crud param will be used to find the params in the right source
 
-        //source based on the verb
+        //source based on the method
         const sourcesConvetions = {
             GET: { IDs: 'params', payload: 'query', },
             POST: { payload: 'body', },
@@ -77,44 +91,56 @@ const defaultConvention = {
         const entityIDs = entity ? Object.entries(entity.prototype.meta.schema).filter(([_, value]) => value?.options.isId).map(([key, _]) => key) : []
 
         //find all the IDs and not IDs fields in the params
-        const paramsIDs = Object.entries(params).filter(([key, _]) => entityIDs.includes(key)).map(([key, _]) => key)
-        const paramsNotIDs = Object.entries(params).filter(([key, _]) => !entityIDs.includes(key)).map(([key, _]) => key)
+        const parametersIDs = Object.entries(request).filter(([key, _]) => entityIDs.includes(key)).map(([key, _]) => key)
+        const parametersNotIDs = Object.entries(request).filter(([key, _]) => !entityIDs.includes(key)).map(([key, _]) => key)
 
         //result is a object with the params in the right source ({ [source]: { [paramName]: [paramType] } })
-        //if the verbs is not in the sourcesConvetions, the source will be 'body'
+        //if the methods is not in the sourcesConvetions, the source will be 'body'
         const result = {}
-        if (paramsIDs.length) {
-            const source = sourcesConvetions[verb]?.IDs || 'body'
-            result[source] = Object.fromEntries(paramsIDs.map(id => [id, params[id]]))
+        if (parametersIDs.length) {
+            const source = sourcesConvetions[method]?.IDs || 'body'
+            result[source] = Object.fromEntries(parametersIDs.map(id => [id, request[id]]))
         }
-        if (paramsNotIDs.length) {
-            const source = sourcesConvetions[verb]?.payload || 'body'
-            result[source] = Object.fromEntries(paramsNotIDs.map(id => [id, params[id]]))
+        if (parametersNotIDs.length) {
+            const source = sourcesConvetions[method]?.payload || 'body'
+            result[source] = Object.fromEntries(parametersNotIDs.map(id => [id, request[id]]))
         }
         return result
     }
 }
 
-function populateMetadata({ herbarium, convention, controller }) {
+function populateMetadata({ herbarium, controller, convention = defaultConvention }) {
+    if (!herbarium) throw new Error('herbarium is required')
 
-    convention = convention || defaultConvention
+    function normalizeHTTPMethod(method) {
+        let normalized = ''
+        if (typeof method === 'string') normalized = method.toUpperCase()
+        if (['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT'].includes(normalized)) return normalized
+        return
+    }
 
     for (let uc of herbarium.usecases.all) {
         const [ucName, info] = uc
-        const crud = info.operation || herbarium.crud.other
+        const operation = info.operation || herbarium.crud.other
         const entity = info.entity
         const group = info.group
         const ucRequest = { ...info.usecase().requestSchema }
 
-        const verb = info?.REST?.verb || convention.crudToVerb(crud)
-        const resource = info?.REST?.resource || convention.toResourceName(entity, group)
-        const path = info?.REST?.path || convention.crudToPath(crud, resource)
-        const params = info?.REST?.params || convention.toRequestParams(verb, entity, ucRequest)
+        const method = normalizeHTTPMethod(info?.REST?.method || convention.operationToMethod({ operation, entity, group }))
+        if (!method) throw new Error(`Invalid Method. It is not possible to populate the REST metadata for usecase ${ucName}. Please, check the method on the usecase metadata.`)
+
+        const resource = info?.REST?.resource || convention.toResourceName({ entity, group, operation })
+        if (!resource) throw new Error(`Invalid Resource. It is not possible to generate a REST resource name for usecase ${ucName}. Please, add a group or entity to the usecase metadata.`)
+
+        const parameters = info?.REST?.parameters || convention.requestToParameters({ method, entity, request: ucRequest, group, operation })
+        const parametersHandler = info?.REST?.parametersHandler || convention.parametersHandler
+
+        const path = info?.REST?.path || convention.methodToPath({ method, operation, resource, parameters, entity, group })
         const ctlr = info?.REST?.controller || controller || convention.controller
 
-        if (!resource) throw new Error(`It is not possible to generate a REST resource name for usecase ${ucName}. Please, add a group or entity to the usecase metadata.`)
+        const userHandler = info?.REST?.userHandler || convention.userHandler
 
-        info.metadata({ REST: { verb, path, resource, params, controller: ctlr } })
+        info.metadata({ REST: { method, path, resource, parameters, parametersHandler, userHandler, controller: ctlr } })
     }
 
 }
