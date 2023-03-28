@@ -45,7 +45,7 @@ describe('generateEndpoint', () => {
                     path: '/readEntities/:id',
                     parameters: { params: { id1: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id1: req.req.params.id1, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -72,7 +72,7 @@ describe('generateEndpoint', () => {
                     path: '/readEntities',
                     parameters: { query: { id1: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id1: req.req.query.id1, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -99,7 +99,7 @@ describe('generateEndpoint', () => {
                     path: '/createEntities',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -126,7 +126,7 @@ describe('generateEndpoint', () => {
                     path: '/updateEntities/:id',
                     parameters: { params: { id: Number }, body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, name: req.req.body.name, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -153,7 +153,7 @@ describe('generateEndpoint', () => {
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -182,7 +182,7 @@ describe('generateEndpoint', () => {
 
                 // when
                 // then 
-                assert.throws(() => generateEndpoints({ herbarium, server }), /Error: No REST metadata for usecase GETUsecase/)
+                assert.throws(() => generateEndpoints({ herbarium, server }), /Error: No 'REST' metadata for usecase GETUsecase. It is not possible to generate a REST endpoint for this usecase./)
             })
             it('when the use case has no method', () => {
                 // given
@@ -195,7 +195,7 @@ describe('generateEndpoint', () => {
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -216,7 +216,7 @@ describe('generateEndpoint', () => {
                     method,
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -237,7 +237,7 @@ describe('generateEndpoint', () => {
                     method,
                     path: '/deleteEntities/:id',
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
@@ -248,7 +248,7 @@ describe('generateEndpoint', () => {
                 assert.throws(() => generateEndpoints({ herbarium, server }), /Error: 'parameters' metadata is required. It is not possible to generate a REST endpoint for usecase DELETEUsecase./)
 
             })
-            it('when the use case has no userHandler', () => {
+            it('when the use case has no authorizationHandler', () => {
                 // given
                 herbarium.reset()
                 const method = 'DELETE'
@@ -267,7 +267,7 @@ describe('generateEndpoint', () => {
 
                 // when
                 // then 
-                assert.throws(() => generateEndpoints({ herbarium, server }), /Error: 'userHandler' metadata is required. It is not possible to generate a REST endpoint for usecase DELETEUsecase./)
+                assert.throws(() => generateEndpoints({ herbarium, server }), /Error: 'authorizationHandler' metadata is required. It is not possible to generate a REST endpoint for usecase DELETEUsecase./)
             })
             it('when the use case has no controller', () => {
                 // given
@@ -279,7 +279,7 @@ describe('generateEndpoint', () => {
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -291,7 +291,7 @@ describe('generateEndpoint', () => {
         })
     })
 
-    describe.only('when a more than one use case has the same endpoint (method and path)', () => {
+    describe('when a more than one use case has the same endpoint (method and path)', () => {
         it('should throw an error', () => {
             // given
             herbarium.reset()
@@ -304,7 +304,7 @@ describe('generateEndpoint', () => {
                     path: '/samePath',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
                 }
             })
@@ -314,7 +314,7 @@ describe('generateEndpoint', () => {
                     path: '/samePath',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    userHandler: (req) => 'Bob',
+                    authorizationHandler: (req) => 'Bob',
                     controller: (usecase, req, user, res, next, methodName) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
                 }
             })

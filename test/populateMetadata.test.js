@@ -166,7 +166,7 @@ describe('populateMetadata', () => {
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, parameters)
                     assert.deepEqual(metadata.parametersHandler(req, parameters), resultReq)
-                    assert.equal(metadata.userHandler({ user: 'bob' }), 'bob')
+                    assert.equal(metadata.authorizationHandler({ authInfo: 'bob' }), 'bob')
                 })
             })
         })
@@ -215,7 +215,7 @@ describe('populateMetadata', () => {
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, parameters)
                     assert.deepEqual(metadata.parametersHandler(req, parameters), resultReq)
-                    assert.equal(metadata.userHandler({ user: 'bob' }), 'bob')
+                    assert.equal(metadata.authorizationHandler({ authInfo: 'bob' }), 'bob')
                 })
             })
         })
@@ -594,7 +594,7 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.parametersHandler(), 1)
                 })
             })
-            describe('User Handler', () => { 
+            describe('User Handler', () => {
                 it('with user handler', () => {
                     // given
                     herbarium.reset()
@@ -602,7 +602,7 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     const { uc } = anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { userHandler: (request) => 'Jane' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: { authorizationHandler: (request) => 'Jane' } })
 
                     // when
                     populateMetadata({ herbarium })
@@ -614,7 +614,7 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.path, '/readEntities/:id')
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, { params: { id: Number } })
-                    assert.equal(metadata.userHandler(),  'Jane')
+                    assert.equal(metadata.authorizationHandler(), 'Jane')
                 })
             })
 
