@@ -1,5 +1,5 @@
 const { herbarium } = require('@herbsjs/herbarium')
-const { entity, id, field } = require('@herbsjs/gotu')
+const { entity, id, field } = require('@herbsjs/herbs')
 const { usecase, step, Ok } = require('@herbsjs/herbs')
 const { populateMetadata, convention } = require('../src/populateMetadata.js')
 const assert = require('assert').strict
@@ -279,6 +279,7 @@ describe('populateMetadata', () => {
 
             })
         })
+
         describe('Parameters Convention - Use Case Request and Entity Fields', () => {
             describe('Names', () => {
                 it('with IDs with no-"ID" name', () => {
@@ -352,23 +353,32 @@ describe('populateMetadata', () => {
                     assert.deepEqual(metadata.parameters, { params: { id1: Number }, query: { id3: Number, name: String } })
                     assert.equal(metadata.path, '/readEntities/:id1')
                 })
-
-
             })
             describe('Types', () => {
-                it('with all the types', () => {
+
+                it('with all native types', () => {
                     // given
                     herbarium.reset()
                     const operation = herbarium.crud.read
-                    const { entity } = anEntity({ name: `${operation} Entity` })
+                    const { entity } = anEntity({
+                        name: `${operation} Entity`, fields: {
+                            id: id(Number),
+                            name: field(String),
+                            age: field(Number),
+                            isAdult: field(Boolean),
+                            birthDate: field(Date),
+                            address: field(Object),
+                            hobbies: field(Array)
+                        }
+                    })
                     const request = {
                         id: Number,
                         name: String,
                         age: Number,
-                        date: Date,
-                        bool: Boolean,
-                        array: Array,
-                        object: Object,
+                        isAdult: Boolean,
+                        birthDate: Date,
+                        address: Object,
+                        hobbies: Array
                     }
                     const { uc } = anUseCase({ crud: operation, entity, request })
 
@@ -378,20 +388,79 @@ describe('populateMetadata', () => {
                     // then
                     const usecaseName = `${operation}Usecase`
                     metadata = herbarium.usecases.get(usecaseName).REST
-                    assert.deepEqual(metadata.parameters, {
-                        params: {
-                            id: Number,
-                        },
-                        query: {
-                            name: String,
-                            age: Number,
-                            date: Date,
-                            bool: Boolean,
-                            array: Array,
-                            object: Object,
+                    assert.deepEqual(metadata.parameters, { params: { id: Number }, query: { name: String, age: Number, isAdult: Boolean, birthDate: Date, address: Object, hobbies: Array } })
+                    assert.equal(metadata.path, '/readEntities/:id')
+                })
+
+                it('with all native types as arrays', () => { 
+                    // given
+                    herbarium.reset()
+                    const operation = herbarium.crud.read
+                    const { entity } = anEntity({
+                        name: `${operation} Entity`, fields: {
+                            id: id([Number]),
+                            name: field([String]),
+                            age: field([Number]),
+                            isAdult: field([Boolean]),
+                            birthDate: field([Date]),
+                            address: field([Object]),
+                            hobbies: field([Array])
                         }
                     })
+                    const request = {
+                        id: [Number],
+                        name: [String],
+                        age: [Number],
+                        isAdult: [Boolean],
+                        birthDate: [Date],
+                        address: [Object],
+                        hobbies: [Array]
+                    }
+                    const { uc } = anUseCase({ crud: operation, entity, request })
+
+                    // when
+                    populateMetadata({ herbarium })
+
+                    // then
+                    const usecaseName = `${operation}Usecase`
+                    metadata = herbarium.usecases.get(usecaseName).REST
+                    assert.deepEqual(metadata.parameters, { params: { id: [Number] }, query: { name: [String], age: [Number], isAdult: [Boolean], birthDate: [Date], address: [Object], hobbies: [Array] } })
+                    assert.equal(metadata.path, '/readEntities/:id')
                 })
+
+                it('with entity on request', () => { 
+                    // given
+                    herbarium.reset()
+                    const operation = herbarium.crud.read
+                    const { entity } = anEntity({
+                        name: `${operation} Entity`, fields: {
+                            id: id(Number),
+                            name: field(String)
+                        }
+                    })
+                    const { entity2 } = anEntity({
+                        name: `${operation} Entity`, fields: {
+                            id: id(Number),
+                            description: field(String)
+                        }
+                    })
+                    const request = {
+                        id: Number,
+                        name: String,
+                        entity: entity2
+                    }
+                    const { uc } = anUseCase({ crud: operation, entity, request })
+
+                    // when
+                    populateMetadata({ herbarium })
+
+                    // then
+                    const usecaseName = `${operation}Usecase`
+                    metadata = herbarium.usecases.get(usecaseName).REST
+                    assert.deepEqual(metadata.parameters, { params: { id: Number }, query: { name: String, entity: entity2 } })
+                    assert.equal(metadata.path, '/readEntities/:id')
+                })
+
             })
         })
     })
@@ -594,8 +663,8 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.parametersHandler(), 1)
                 })
             })
-            describe('User Handler', () => {
-                it('with user handler', () => {
+            describe('Authorization Handler', () => {
+                it('with authorization handler', () => {
                     // given
                     herbarium.reset()
                     const operation = herbarium.crud.read

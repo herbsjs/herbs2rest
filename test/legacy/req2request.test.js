@@ -1,6 +1,6 @@
 const assert = require('assert')
 
-const req2request = require('../src/helpers/req2request')
+const req2request = require('../../src/legacy/helpers/req2request')
 
 describe('Helper - req2request', () => {
   const usecase = () => ({

@@ -1,6 +1,9 @@
-const defaultController = require('../defaultController')
+const defaultController = require('./defaultController')
 
 function generateControllers({ herbarium, controller = defaultController }) {
+
+    console.warn(`⚠️  'generateControllers' function is deprecated. Use the 'populateMetadata' function instead.`)
+
     const entities = findEntitiesAndGroups(herbarium)
 
     const controllers = entities.map(item => {

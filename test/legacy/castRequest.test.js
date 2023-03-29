@@ -1,6 +1,6 @@
 const assert = require('assert')
 
-const castRequest = require('../src/helpers/castRequest')
+const castRequest = require('../../src/legacy/helpers/castRequest')
 
 const { entity, field } = require('@herbsjs/gotu')
 

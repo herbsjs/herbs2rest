@@ -38,15 +38,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'GET'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id1: req.id1, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/readEntities/:id',
                     parameters: { params: { id1: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id1: req.req.params.id1, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -65,15 +63,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'GET'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id1: req.id1, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/readEntities',
                     parameters: { query: { id1: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id1: req.req.query.id1, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id1: request.req.query.id1, usecaseDesc: usecase().description, user: authorizationInfo })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -92,15 +88,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'POST'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ name: req.name, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/createEntities',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ name: request.req.body.name, usecaseDesc: usecase().description, user: authorizationInfo })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -119,15 +113,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'PUT'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id: req.id, name: req.name, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/updateEntities/:id',
                     parameters: { params: { id: Number }, body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, name: req.req.body.name, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id: request.req.params.id, name: request.req.body.name, usecaseDesc: usecase().description, user: authorizationInfo })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -146,15 +138,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id: req.id, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id: request.req.params.id, usecaseDesc: usecase().description, user: authorizationInfo })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -177,26 +167,46 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const { uc } = anUseCase({ method: 'GET' })
                 const server = aServer()
-                const controller = (usecase, req, user, res, next, methodName) =>
+                const controller = ({ usecase, request, authorizationInfo, res, next }) =>
                     ({ id1: req.req.query.id1, usecaseDesc: usecase().description, user })
 
                 // when
+                generateEndpoints({ herbarium, server })
+
                 // then 
-                assert.throws(() => generateEndpoints({ herbarium, server }), /Error: No 'REST' metadata for usecase GETUsecase. It is not possible to generate a REST endpoint for this usecase./)
+                assert.equal(server.path, undefined)
+                assert.equal(server.method, undefined)
+                assert.equal(server.controller, undefined)
             })
+            it('when the use case has an empty REST', () => { 
+                // given
+                herbarium.reset()
+                const method = 'GET'
+                const { uc } = anUseCase({ method })
+                const REST = {}
+                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                const server = aServer()
+
+                // when
+                generateEndpoints({ herbarium, server })
+
+                // then 
+                assert.equal(server.path, undefined)
+                assert.equal(server.method, undefined)
+                assert.equal(server.controller, undefined)
+            })
+
             it('when the use case has no method', () => {
                 // given
                 herbarium.reset()
                 const method = 'DELETE'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id: req.id, usecaseDesc: usecase().description, user })
                 const REST = {
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -210,14 +220,12 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id: req.id, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -231,14 +239,12 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id: req.id, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/deleteEntities/:id',
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -253,14 +259,12 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 const { uc } = anUseCase({ method })
-                const controller = (usecase, req, user, res, next, methodName) =>
-                    ({ id: req.id, usecaseDesc: usecase().description, user })
                 const REST = {
                     method,
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
-                    controller: (usecase, req, user, res, next, methodName) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ id: req.req.params.id, usecaseDesc: usecase().description, user })
                 }
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
@@ -305,7 +309,7 @@ describe('generateEndpoint', () => {
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
                 }
             })
             herbarium.usecases.get(`POSTUsecase`).metadata({
@@ -315,7 +319,7 @@ describe('generateEndpoint', () => {
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (req) => 'Bob',
-                    controller: (usecase, req, user, res, next, methodName) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
+                    controller: ({ usecase, request, authorizationInfo, res, next }) => ({ name: req.req.body.name, usecaseDesc: usecase().description, user })
                 }
             })
 

@@ -1,6 +1,6 @@
 const assert = require('assert')
 
-const castRequestParams = require('../src/helpers/castRequestParams')
+const castRequestParams = require('../../src/legacy/helpers/castRequestParams')
 
 describe('Helper - castRequestParams', () => {
   it('Should return value when type not in array', () => {

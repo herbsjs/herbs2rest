@@ -1,24 +1,44 @@
 const defaultController = require("./defaultController")
 const { herbarium } = require("@herbsjs/herbarium")
+const { entity } = require("@herbsjs/herbs")
 
 const defaultConvention = {
 
     controller: defaultController,
 
     /**
-     * Extract parameters from request using the corresponding source
+     * Extract parameters from request using the corresponding source and cast them to the corresponding type
      * @param {Request} req - Express request
      * @param {Object} parameters - Parameters to be extracted from request in the form { source: { name: type } }. Sources can be: query, params, body, headers, cookies, etc.
      * @returns {Object} - Object with parameters extracted from request in the form { name: value }
      */
-    parametersHandler: (req, parameters) => {
+    parametersHandler(req, parameters) {
         const result = {}
         for (let source in parameters) {
             for (const param in parameters[source]) {
-                result[param] = req[source][param]
+                const type = parameters[source][param]
+                const value = req[source][param]
+                result[param] = defaultConvention.parametersCast(value, type)
             }
         }
         return result
+    },
+
+    /**
+     * Cast request parameters (string) to the corresponding type
+     * @param {String} value - Parameter value
+     * @param {Object} type - Parameter type
+     * @returns {Object} - Parameter value casted to the corresponding type
+     */
+    parametersCast(value, type) {
+        if (value === undefined) return undefined
+        if (Array.isArray(type)) return value.map(item => defaultConvention.parametersCast(item, type[0]))
+        if (type === Array) return value
+        if (type === Number) return Number(value)
+        if (type === String) return String(value)
+        if (type === Boolean) return Boolean(value)
+        if (type === Date) return new Date(value)
+        if (entity.isEntity(type)) return Object.assign(new type(), value)
     },
 
     /**
@@ -26,7 +46,7 @@ const defaultConvention = {
      * @param {Request} req - Express request
      * @returns {Object} - Object with authorization info
     */
-    authorizationHandler: (req) => req.authInfo,
+    authorizationHandler(req) { return req.authInfo },
 
     /**
      * Convert CRUD operation to HTTP method

@@ -5,7 +5,7 @@ const { Ok, step, usecase, entity, id, field } = require('@herbsjs/herbs')
 const express = require('express')
 
 const generateRoutes = require('../../src/legacy/generateRoutes')
-const defaultController = require('../../src/defaultController')
+const defaultController = require('../../src/legacy/defaultController')
 
 describe('Legacy - Generate Routes', () => {
   const entityTest = entity('test entity', {

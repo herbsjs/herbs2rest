@@ -2,203 +2,179 @@ const assert = require('assert')
 const { Ok, Err, usecase, step } = require('@herbsjs/herbs')
 const defaultController = require('../src/defaultController')
 
-describe('Herbs2Rest - Default Controller', () => {
-  class Response {
-    status = (statusCode) => {
-      this.statusCode = statusCode
 
-      return {
-        json: (data) => {
-          this.data = data
-        },
-      }
+describe('Default Controller', () => {
+
+    function aResponse() {
+        return {
+            status(code) { this._status = code; return this },
+            send(data) { this._data = data; return this },
+            json(data) { this._data = data; return this },
+            end() { return this },
+        }
     }
 
-    end = () => { }
-  }
+    const anUseCase = ({ stepReturn }) =>
+        () => usecase(`An Usecase`, {
+            request: { id: Number },
+            authorize: async _ => Ok(),
+            'A Step': step(ctx => stepReturn(ctx))
 
-  it('Should return 200 when everything runs ok', async () => {
-    const res = new Response()
-    const usecase = () => ({
-      authorize: async () => true,
-      run: () => Ok(),
-      requestSchema: {
-        name: String,
-        number: Number,
-      },
+        })
+
+    describe('When usecase returns Ok', () => {
+
+        it('Should return 200', async () => {
+            // Given
+            const res = aResponse()
+            const usecase = anUseCase({ stepReturn: (ctx) => { ctx.ret = ctx.req.id } })
+
+            // When
+            await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+            // Then
+            assert.deepStrictEqual(res._status, 200)
+            assert.deepStrictEqual(res._data, 1)
+        })
     })
 
-    const req = {}
+    describe('When usecase returns Err', () => {
 
-    await defaultController(usecase, req, null, res, () => { })
+        describe('When usecase returns Err.invalidArgument', () => {
+            it('Should return 400', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.invalidArguments({ message: `Invalid Arg X`, payload: { entity: 'entity Y' } }, 'Arg X') })
 
-    assert.deepStrictEqual(res.statusCode, 200)
-  })
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
 
-  it('Should not authorize usecase', async () => {
-    // Given
-    const res = new Response()
+                // Then
+                assert.deepStrictEqual(res._status, 400)
+                assert.deepStrictEqual(res._data, { error: { payload: { entity: 'entity Y', invalidArgs: undefined }, code: 'INVALID_ARGUMENTS', message: 'Invalid Arg X', cause: undefined } })
+            })
+        })
 
-    const usecase = () => ({
-      authorize: async () => false,
+        describe('When usecase returns Err.notFound', () => {
+            it('Should return 404', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.notFound() })
+
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+                // Then
+                assert.deepStrictEqual(res._status, 404)
+                assert.deepStrictEqual(res._data, { error: { payload: undefined, code: 'NOT_FOUND', message: 'Not Found', cause: undefined } })
+            })
+        })
+
+        describe('When usecase returns Err.alreadyExists', () => {
+            it('Should return 409', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.alreadyExists() })
+
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+                // Then
+                assert.deepStrictEqual(res._status, 409)
+                assert.deepStrictEqual(res._data, { error: { payload: undefined, code: 'ALREADY_EXISTS', message: 'Already exists', cause: undefined } })
+            })
+        })
+
+        describe('When usecase returns Err.invalidEntity', () => {
+            it('Should return 422', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.invalidEntity() })
+
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+                // Then
+                assert.deepStrictEqual(res._status, 422)
+                assert.deepStrictEqual(res._data, { error: { payload: undefined, code: 'INVALID_ENTITY', message: 'Invalid entity', cause: undefined } })
+            })
+        })
+
+        describe('When usecase returns Err.permissionDenied', () => {
+            it('Should return 403', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.permissionDenied() })
+
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+                // Then
+                assert.deepStrictEqual(res._status, 403)
+                assert.deepStrictEqual(res._data, { error: { payload: undefined, code: 'PERMISSION_DENIED', message: 'Permission denied', cause: undefined } })
+            })
+        })
+
+        describe('When usecase returns Err.unknown', () => {
+            it('Should return 500', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.unknown() })
+
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+                // Then
+                assert.deepStrictEqual(res._status, 500)
+                assert.deepStrictEqual(res._data, { error: { payload: undefined, code: 'UNKNOWN', message: 'Unknown Error', cause: undefined } })
+            })
+        })
+
+        describe('When usecase returns Err.custom', () => {
+            it('Should return 500', async () => {
+                // Given
+                const res = aResponse()
+                const usecase = anUseCase({ stepReturn: (ctx) => Err.buildCustomErr('PRODUCT_ERR', 'message', { entity: 'product' }, undefined, 'Product') })
+
+                // When
+                await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
+
+                // Then
+                assert.deepStrictEqual(res._status, 400)
+                assert.deepStrictEqual(res._data, { error: { payload: { entity: 'product' }, code: 'PRODUCT_ERR', message: 'message', cause: undefined } })
+            })
+        })
     })
 
-    // When
-    await defaultController(usecase, null, null, res, () => { })
+    describe('When usecase throws an error', () => {
+        it('Should return 500', async () => {
+            // Given
+            const res = aResponse()
+            const usecase = anUseCase({ stepReturn: (ctx) => { throw new Error('Something went wrong') } })
 
-    // Then
-    assert.deepStrictEqual(res.statusCode, 403)
-  })
+            // When
+            await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
 
-  it('Should return 400 when usecase returns a Err.invalidArgument', async () => {
-    const res = new Response()
+            // Then
+            assert.deepStrictEqual(res._status, 500)
+            assert.deepStrictEqual(res._data, { error: 'Error', message: 'Something went wrong' })
+        })
+    })
 
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step((ctx) =>
-          ctx.ret = Err.invalidArguments({ message: `Invalid Arg X`, payload: { entity: 'entity Y' } }, 'Arg X')
-        )
-      })
+    describe('When something throws an error', () => {
+        it('Should return 500', async () => {
+            // Given
+            const res = aResponse()
+            const usecase = () => { throw new Error('Something went wrong') }
 
-    const req = {}
+            // When
+            await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
 
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 400)
-    assert.deepStrictEqual(res.data.error.code, 'INVALID_ARGUMENTS')
-  })
-
-  it('Should return 403 when usecase returns a Err.permissionDenied', async () => {
-    const res = new Response()
-
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step((ctx) =>
-          ctx.ret = Err.permissionDenied({ message: `Permission Denied X`, payload: { entity: 'entity Y' } })
-        )
-      })
-
-    const req = {}
-
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 403)
-    assert.deepStrictEqual(res.data.error.code, 'PERMISSION_DENIED')
-  })
-
-  it('Should return 404 when usecase returns a Err.permissionDenied', async () => {
-    const res = new Response()
-
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step((ctx) =>
-          ctx.ret = Err.notFound({ message: `Not Found X`, payload: { entity: 'entity Y' } })
-        )
-      })
-
-    const req = {}
-
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 404)
-    assert.deepStrictEqual(res.data.error.code, 'NOT_FOUND')
-  })
-
-  it('Should return 409 when usecase returns a Err.alreadyExists', async () => {
-    const res = new Response()
-
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step((ctx) =>
-          ctx.ret = Err.alreadyExists({ message: `Already Exists X`, payload: { entity: 'entity Y' } })
-        )
-      })
-
-    const req = {}
-
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 409)
-    assert.deepStrictEqual(res.data.error.code, 'ALREADY_EXISTS')
-  })
-
-  it('Should return 422 when usecase returns a Err.invalidEntity', async () => {
-    const res = new Response()
-
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step((ctx) =>
-          ctx.ret = Err.invalidEntity({ message: `Invalid Entity X`, payload: { entity: 'entity Y' } })
-        )
-      })
-
-    const req = {}
-
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 422)
-    assert.deepStrictEqual(res.data.error.code, 'INVALID_ENTITY')
-  })
-
-  it('Should return 500 when usecase returns a Err.unknown', async () => {
-    const res = new Response()
-
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step((ctx) =>
-          ctx.ret = Err.unknown({ message: `Unknown X`, payload: { entity: 'entity Y' } })
-        )
-      })
-
-    const req = {}
-
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 500)
-    assert.deepStrictEqual(res.data.error.code, 'UNKNOWN')
-  })
-
-  it('Should return 500 when usecase throws error', async () => {
-    const res = new Response()
-
-    const uc = () =>
-      usecase('Use Case X', {
-        request: { name: String, number: Number, },
-        authorize: async () => Ok(),
-        'Step 1': step(() => { throw new Error() }
-        )
-      })
-
-    const req = {}
-
-    await defaultController(uc, req, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 500)
-  })
-
-  it('Should return 500 when something throws error', async () => {
-    const res = new Response()
-
-    const usecase = () => {
-      throw new Error('Test')
-    }
-
-    await defaultController(usecase, null, null, res, () => { })
-
-    assert.deepStrictEqual(res.statusCode, 500)
-  })
-
+            // Then
+            assert.deepStrictEqual(res._status, 500)
+            assert.deepStrictEqual(res._data, { error: 'Error', message: 'Something went wrong' })
+        })
+    })
 
 })
+
