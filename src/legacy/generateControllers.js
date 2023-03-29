@@ -2,6 +2,7 @@ const defaultController = require('./defaultController')
 
 function generateControllers({ herbarium, controller = defaultController }) {
 
+    // eslint-disable-next-line no-console
     console.warn(`⚠️  'generateControllers' function is deprecated. Use the 'populateMetadata' function instead.`)
 
     const entities = findEntitiesAndGroups(herbarium)

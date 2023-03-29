@@ -44,7 +44,7 @@ describe('Default Controller', () => {
             it('Should return 400', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.invalidArguments({ message: `Invalid Arg X`, payload: { entity: 'entity Y' } }, 'Arg X') })
+                const usecase = anUseCase({ stepReturn: () => Err.invalidArguments({ message: `Invalid Arg X`, payload: { entity: 'entity Y' } }, 'Arg X') })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -59,7 +59,7 @@ describe('Default Controller', () => {
             it('Should return 404', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.notFound() })
+                const usecase = anUseCase({ stepReturn: () => Err.notFound() })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -74,7 +74,7 @@ describe('Default Controller', () => {
             it('Should return 409', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.alreadyExists() })
+                const usecase = anUseCase({ stepReturn: () => Err.alreadyExists() })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -89,7 +89,7 @@ describe('Default Controller', () => {
             it('Should return 422', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.invalidEntity() })
+                const usecase = anUseCase({ stepReturn: () => Err.invalidEntity() })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -104,7 +104,7 @@ describe('Default Controller', () => {
             it('Should return 403', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.permissionDenied() })
+                const usecase = anUseCase({ stepReturn: () => Err.permissionDenied() })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -119,7 +119,7 @@ describe('Default Controller', () => {
             it('Should return 500', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.unknown() })
+                const usecase = anUseCase({ stepReturn: () => Err.unknown() })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -134,7 +134,7 @@ describe('Default Controller', () => {
             it('Should return 500', async () => {
                 // Given
                 const res = aResponse()
-                const usecase = anUseCase({ stepReturn: (ctx) => Err.buildCustomErr('PRODUCT_ERR', 'message', { entity: 'product' }, undefined, 'Product') })
+                const usecase = anUseCase({ stepReturn: () => Err.buildCustomErr('PRODUCT_ERR', 'message', { entity: 'product' }, undefined, 'Product') })
 
                 // When
                 await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })
@@ -150,7 +150,7 @@ describe('Default Controller', () => {
         it('Should return 500', async () => {
             // Given
             const res = aResponse()
-            const usecase = anUseCase({ stepReturn: (ctx) => { throw new Error('Something went wrong') } })
+            const usecase = anUseCase({ stepReturn: () => { throw new Error('Something went wrong') } })
 
             // When
             await defaultController({ usecase, request: { id: 1 }, authorizationInfo: {}, res, next: () => { } })

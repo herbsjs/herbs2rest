@@ -52,10 +52,10 @@ describe('populateMetadata', () => {
         it('should return the correct controller', () => {
             // given
             herbarium.reset()
-            const appDefaultController = (usecase, req, user, res, next, methodName) => 2
+            const appDefaultController = () => 2
             const { entity } = anEntity({ name: 'Entity' })
-            const { uc1 } = anUseCase({ crud: herbarium.crud.read, entity })
-            const { uc2 } = anUseCase({ crud: herbarium.crud.update, entity })
+            anUseCase({ crud: herbarium.crud.read, entity })
+            anUseCase({ crud: herbarium.crud.update, entity })
 
             // when
             populateMetadata({ herbarium, controller: appDefaultController })
@@ -73,7 +73,7 @@ describe('populateMetadata', () => {
             // given
             herbarium.reset()
             const { entity } = anEntity({ name: 'Entity' })
-            const { uc } = anUseCase({ crud: herbarium.crud.read, entity })
+            anUseCase({ crud: herbarium.crud.read, entity })
 
             // clone the default convention and change the toPlural method
             const newConvention = Object.assign({}, convention)
@@ -152,7 +152,7 @@ describe('populateMetadata', () => {
                     // given
                     herbarium.reset()
                     const { entity } = anEntity({ name: entityName })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
 
                     // when
                     populateMetadata({ herbarium })
@@ -200,7 +200,7 @@ describe('populateMetadata', () => {
                     // given
                     herbarium.reset()
                     const { entity } = anEntity({ name: entityName })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
 
                     // when
                     populateMetadata({ herbarium })
@@ -226,7 +226,7 @@ describe('populateMetadata', () => {
                 herbarium.reset()
                 const operation = herbarium.crud.read
                 const { entity } = anEntity({ name: `${operation} Entity` })
-                const { uc } = anUseCase({ crud: operation, entity })
+                anUseCase({ crud: operation, entity })
 
                 // when
                 populateMetadata({ herbarium })
@@ -241,7 +241,7 @@ describe('populateMetadata', () => {
                 herbarium.reset()
                 const operation = herbarium.crud.read
                 const { entity } = anEntity({ name: `${operation} Entity` })
-                const { uc } = anUseCase({ crud: operation, entity, group: undefined })
+                anUseCase({ crud: operation, entity, group: undefined })
 
                 // when
                 populateMetadata({ herbarium })
@@ -255,8 +255,8 @@ describe('populateMetadata', () => {
                 // given
                 herbarium.reset()
                 const operation = herbarium.crud.read
-                const { entity } = anEntity({ name: `${operation} Entity` })
-                const { uc } = anUseCase({ crud: operation, entity: undefined, group: 'The Group' })
+                anEntity({ name: `${operation} Entity` })
+                anUseCase({ crud: operation, entity: undefined, group: 'The Group' })
 
                 // when
                 populateMetadata({ herbarium })
@@ -270,7 +270,7 @@ describe('populateMetadata', () => {
                 // given
                 herbarium.reset()
                 const operation = herbarium.crud.read
-                const { uc } = anUseCase({ crud: operation, entity: undefined, group: null })
+                anUseCase({ crud: operation, entity: undefined, group: null })
 
                 // when
                 // then
@@ -288,7 +288,7 @@ describe('populateMetadata', () => {
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity`, fields: { idName: id(Number), name: field(String) } })
                     const request = { idName: Number, name: String }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -306,7 +306,7 @@ describe('populateMetadata', () => {
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity`, fields: { name: field(String) } })
                     const request = { id: Number, name: String }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -324,7 +324,7 @@ describe('populateMetadata', () => {
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity`, fields: { id1: id(Number), id2: id(Number), name: field(String) } })
                     const request = { id1: Number, id2: Number, name: String }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -342,7 +342,7 @@ describe('populateMetadata', () => {
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity`, fields: { id1: id(Number), id2: id(Number), name: field(String) } })
                     const request = { id1: Number, id3: Number, name: String }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -380,7 +380,7 @@ describe('populateMetadata', () => {
                         address: Object,
                         hobbies: Array
                     }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -416,7 +416,7 @@ describe('populateMetadata', () => {
                         address: [Object],
                         hobbies: [Array]
                     }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -449,7 +449,7 @@ describe('populateMetadata', () => {
                         name: String,
                         entity: entity2
                     }
-                    const { uc } = anUseCase({ crud: operation, entity, request })
+                    anUseCase({ crud: operation, entity, request })
 
                     // when
                     populateMetadata({ herbarium })
@@ -473,7 +473,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({ REST: { resource: 'overriddenResource' } })
 
@@ -496,7 +496,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({ REST: { method: 'POST' } })
 
@@ -517,7 +517,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({ REST: { method: 'INVALID' } })
 
@@ -534,7 +534,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({ REST: { path: '/overriddenPath' } })
 
@@ -556,9 +556,9 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { controller: (usecase, req, user, res, next, methodName) => 1 } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: { controller: () => 1 } })
 
                     // when
                     populateMetadata({ herbarium })
@@ -578,7 +578,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({ REST: { parameters: { query: { id1: Number } } } })
 
@@ -598,7 +598,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({
                         REST: {
@@ -646,9 +646,9 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { parametersHandler: (req, res, next) => 1 } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: { parametersHandler: () => 1 } })
 
                     // when
                     populateMetadata({ herbarium })
@@ -669,9 +669,9 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { authorizationHandler: (request) => 'Jane' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: { authorizationHandler: () => 'Jane' } })
 
                     // when
                     populateMetadata({ herbarium })
@@ -693,7 +693,7 @@ describe('populateMetadata', () => {
                     herbarium.reset()
                     const operation = herbarium.crud.read
                     const { entity } = anEntity({ name: `${operation} Entity` })
-                    const { uc } = anUseCase({ crud: operation, entity })
+                    anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({
                         REST: {
@@ -701,8 +701,8 @@ describe('populateMetadata', () => {
                             path: '/overriddenPath',
                             resource: 'overriddenResource',
                             parameters: { cookie: { id1: Number } },
-                            parametersHandler: (req, res, next) => 1,
-                            controller: (usecase, req, user, res, next, methodName) => 1
+                            parametersHandler: () => 1,
+                            controller: () => 1
                         }
                     })
 

@@ -69,7 +69,7 @@ describe('Herbs2REST App - Integration Test', () => {
                 // given
                 herbarium.reset()
                 const { entity } = anEntity({ name: 'TestEntity' })
-                const { anUC } = anUseCase({
+                anUseCase({
                     entity, stepReturn: (ctx) => {
                         if (ctx.req.id === 1) ctx.ret = { processed: true }
                     }
@@ -99,7 +99,7 @@ describe('Herbs2REST App - Integration Test', () => {
                 // given
                 herbarium.reset()
                 const { entity } = anEntity({ name: 'TestEntity' })
-                const { anUC } = anUseCase({ entity, stepReturn: (ctx) => Err({ processed: false }) })
+                anUseCase({ entity, stepReturn: (_) => Err({ processed: false }) })
                 const server = aServer()
 
                 // when - setup
@@ -125,7 +125,7 @@ describe('Herbs2REST App - Integration Test', () => {
                 // given
                 herbarium.reset()
                 const { entity } = anEntity({ name: 'TestEntity' })
-                const { anUC } = anUseCase({ entity, stepReturn: (ctx) => { throw new Error('Error') } })
+                anUseCase({ entity, stepReturn: (_) => { throw new Error('Error') } })
                 const server = aServer()
 
                 // when - setup
@@ -157,7 +157,7 @@ describe('Herbs2REST App - Integration Test', () => {
                 const { entity: Customer } = anEntity({ name: 'TestEntity', fields: { id: id(Number), name: field(String), age: field(Number) } })
                 const { entity } = anEntity({ name: 'TestEntity', fields: { id: id(Number), name: field(String), hobbies: field([String]), customers: field([Customer]), customer: field(Customer) } })
 
-                const { anUC } = anUseCase({
+                anUseCase({
                     entity,
                     crud: herbarium.crud.update,
                     request: { id: Number, name: String, hobbies: [String], customers: [Customer], customer: Customer },
@@ -206,7 +206,7 @@ describe('Herbs2REST App - Integration Test', () => {
                 // given
                 herbarium.reset()
                 const { entity } = anEntity({ name: 'TestEntity', fields: { id: id(Number), name: field(String), age: field(Number) } })
-                const { anUC } = anUseCase({ entity, crud: herbarium.crud.update, request: { id: Number, name: String, age: Number }, stepReturn: (ctx) => { ctx.ret = { processed: true } } })
+                anUseCase({ entity, crud: herbarium.crud.update, request: { id: Number, name: String, age: Number }, stepReturn: (ctx) => { ctx.ret = { processed: true } } })
                 const server = aServer()
 
                 // when - setup
@@ -217,7 +217,7 @@ describe('Herbs2REST App - Integration Test', () => {
                 const expressController = server.endpoints[0].controller
                 const req = { params: { id: '1' }, body: { name: 'John', age: 20 } }
                 const res = aResponse()
-                const next = function (arg) { this._called = true }
+                const next = function () { this._called = true }
                 await expressController(req, res, next)
 
                 // then

@@ -1,5 +1,6 @@
 function generateRoutes(routes, app, endpointInfo = false) {
 
+  // eslint-disable-next-line no-console
   console.warn(`⚠️  'generateRoutes' function is deprecated. Use the 'generateEndpoints' function instead.`)
 
   // eslint-disable-next-line no-console
