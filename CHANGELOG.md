@@ -1,3 +1,16 @@
+# [4.1.0-beta.1](https://github.com/herbsjs/herbs2rest/compare/v4.0.0...v4.1.0-beta.1) (2023-03-30)
+
+
+### Features
+
+* **v2:** new herbs2rest - generate metadata on herbarium, new architecture, etc ([054bbf4](https://github.com/herbsjs/herbs2rest/commit/054bbf4d3a55d8204d39ffe67426711688cc964c))
+
+
+### Reverts
+
+* **node:** back to 16.x ([4c70681](https://github.com/herbsjs/herbs2rest/commit/4c70681ccb6855244e7cb68d15efdee8cc346ad4))
+* **semantic release:** go back to version 19.0.3 ([dd35628](https://github.com/herbsjs/herbs2rest/commit/dd35628d3c0063c4f82e7c0dc6f893440dee6a5e))
+
 # [4.0.0](https://github.com/herbsjs/herbs2rest/compare/v3.2.4...v4.0.0) (2023-03-07)
 
 
