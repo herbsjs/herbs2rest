@@ -1,6 +1,6 @@
 const defaultController = require("./defaultController")
 const { herbarium } = require("@herbsjs/herbarium")
-const { entity } = require("@herbsjs/herbs")
+const { entity, tryParse } = require("@herbsjs/herbs")
 
 const defaultConvention = {
 
@@ -31,14 +31,9 @@ const defaultConvention = {
      * @returns {Object} - Parameter value casted to the corresponding type
      */
     parametersCast(value, type) {
-        if (value === undefined) return undefined
         if (Array.isArray(type)) return value.map(item => defaultConvention.parametersCast(item, type[0]))
-        if (type === Array) return value
-        if (type === Number) return Number(value)
-        if (type === String) return String(value)
-        if (type === Boolean) return Boolean(value)
-        if (type === Date) return new Date(value)
         if (entity.isEntity(type)) return Object.assign(new type(), value)
+        return tryParse(value, type)
     },
 
     /**
