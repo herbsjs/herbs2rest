@@ -1,3 +1,11 @@
+# [4.1.0-beta.2](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2023-04-13)
+
+
+### Features
+
+* **core:** multiples Endpoint for a Use Case ([ce94a56](https://github.com/herbsjs/herbs2rest/commit/ce94a5657eeeef6ca7293d4e585a067d2ca46ed2))
+* **populatemetadata:** versioning API - Now it is possible to have the version number on the path ([b9a1c36](https://github.com/herbsjs/herbs2rest/commit/b9a1c365a4b30fbe2a7f3f404beb1e89b8f63eeb))
+
 # [4.1.0-beta.1](https://github.com/herbsjs/herbs2rest/compare/v4.0.0...v4.1.0-beta.1) (2023-03-30)
 
 
