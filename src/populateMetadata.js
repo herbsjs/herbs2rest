@@ -110,24 +110,25 @@ const defaultConvention = {
      * @param {Object} options.parameters - Parameters to be extracted from request in the form { source: { name: type } }
      * @return {String} - Path
      */
-    methodToPath({ method, operation, resource, parameters }) {
+    methodToPath({ version, method, operation, resource, parameters }) {
         if (!resource) return
         const params = Object.keys(parameters?.params || {})
         const template = params.length > 0 ? `/:${params.join('/:')}` : ''
+        const versionPrefix = version ? `/${version}` : ''
 
         // convetion based on HTTP method
         switch (method) {
             case 'GET':
-                if (operation === herbarium.crud.readAll) return `/${resource}`
-                return `/${resource}${template}`
+                if (operation === herbarium.crud.readAll) return `${versionPrefix}/${resource}`
+                return `${versionPrefix}/${resource}${template}`
             case 'POST':
-                return `/${resource}`
+                return `${versionPrefix}/${resource}`
             case 'PUT':
-                return `/${resource}${template}`
+                return `${versionPrefix}/${resource}${template}`
             case 'DELETE':
-                return `/${resource}${template}`
+                return `${versionPrefix}/${resource}${template}`
             default:
-                return `/${resource}`
+                return `${versionPrefix}/${resource}`
         }
     },
 
@@ -180,7 +181,7 @@ const defaultConvention = {
  * @param {Object} options.convention - Convention to be used to populate the metadata and generate the endpoints
  * @returns {Herbarium} - Herbarium instance with the REST metadata populated
  */
-function populateMetadata({ herbarium, controller, convention = defaultConvention }) {
+function populateMetadata({ herbarium, controller, version = '', convention = defaultConvention }) {
     if (!herbarium) throw new Error('herbarium is required')
 
     function normalizeHTTPMethod(method) {
@@ -197,6 +198,8 @@ function populateMetadata({ herbarium, controller, convention = defaultConventio
         const group = info.group
         const ucRequest = { ...info.usecase().requestSchema }
 
+        const versioning = info?.REST?.version || version
+
         const method = normalizeHTTPMethod(info?.REST?.method || convention.operationToMethod({ operation, entity, group }))
         if (!method) throw new Error(`Invalid Method. It is not possible to populate the REST metadata for usecase ${ucName}. Please, check the method on the usecase metadata.`)
 
@@ -206,12 +209,12 @@ function populateMetadata({ herbarium, controller, convention = defaultConventio
         const parameters = info?.REST?.parameters || convention.requestToParameters({ method, entity, request: ucRequest, group, operation })
         const parametersHandler = info?.REST?.parametersHandler || convention.parametersHandler
 
-        const path = info?.REST?.path || convention.methodToPath({ method, operation, resource, parameters, entity, group })
+        const path = info?.REST?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity, group })
         const ctlr = info?.REST?.controller || controller || convention.controller
 
         const authorizationHandler = info?.REST?.authorizationHandler || convention.authorizationHandler
 
-        info.metadata({ REST: { method, path, resource, parameters, parametersHandler, authorizationHandler, controller: ctlr } })
+        info.metadata({ REST: { version: versioning, method, path, resource, parameters, parametersHandler, authorizationHandler, controller: ctlr } })
     }
 
 }

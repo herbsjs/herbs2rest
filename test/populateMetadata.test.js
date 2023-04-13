@@ -68,6 +68,25 @@ describe('populateMetadata', () => {
         })
     })
 
+    describe('should accept a versions info for all endpoints', () => {
+        it('should return the correct metadata', () => {
+            // given
+            herbarium.reset()
+            const { entity } = anEntity({ name: 'Entity' })
+            anUseCase({ crud: herbarium.crud.read, entity })
+            anUseCase({ crud: herbarium.crud.update, entity })
+
+            // when
+            populateMetadata({ herbarium, version: 'v1' })
+
+            // then
+            const metadata1 = herbarium.usecases.get('ReadUsecase').REST
+            assert.deepStrictEqual(metadata1.version, 'v1')
+            const metadata2 = herbarium.usecases.get('UpdateUsecase').REST
+            assert.deepStrictEqual(metadata2.version, 'v1')
+        })
+    })
+
     describe('should accept a alternative convention', () => {
         it('should return the correct metadata respecting the new convention', () => {
             // given
@@ -160,6 +179,7 @@ describe('populateMetadata', () => {
                     // then
                     const usecaseName = `${operation}Usecase`
                     const metadata = herbarium.usecases.get(usecaseName).REST
+                    assert.equal(metadata.version, '')
                     assert.equal(metadata.method, method)
                     assert.equal(metadata.resource, resource)
                     assert.equal(metadata.path, path)
@@ -209,6 +229,7 @@ describe('populateMetadata', () => {
                     const usecaseName = `${operation}Usecase`
                     metadata = herbarium.usecases.get(usecaseName).REST
 
+                    assert.equal(metadata.version, '')
                     assert.equal(metadata.method, method)
                     assert.equal(metadata.resource, resource)
                     assert.equal(metadata.path, path)
@@ -392,7 +413,7 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
 
-                it('with all native types as arrays', () => { 
+                it('with all native types as arrays', () => {
                     // given
                     herbarium.reset()
                     const operation = herbarium.crud.read
@@ -428,7 +449,7 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
 
-                it('with entity on request', () => { 
+                it('with entity on request', () => {
                     // given
                     herbarium.reset()
                     const operation = herbarium.crud.read
@@ -461,6 +482,46 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
 
+            })
+
+            describe('Version', () => {
+                it('with versioning', () => {
+                    // given
+                    herbarium.reset()
+                    const operation = herbarium.crud.read
+                    const { entity } = anEntity({ name: `${operation} Entity` })
+                    anUseCase({ crud: operation, entity })
+                    const usecaseName = `${operation}Usecase`
+                    herbarium.usecases.get(usecaseName).metadata({ REST: { version: 'v2' } })
+
+                    // when
+                    populateMetadata({ herbarium })
+
+                    // then
+                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    assert.equal(metadata.method, 'GET')
+                    assert.equal(metadata.resource, 'readEntities')
+                    assert.equal(metadata.path, '/v2/readEntities/:id')
+                })
+
+                it('with versioning empty', () => {
+                    // given
+                    herbarium.reset()
+                    const operation = herbarium.crud.read
+                    const { entity } = anEntity({ name: `${operation} Entity` })
+                    anUseCase({ crud: operation, entity })
+                    const usecaseName = `${operation}Usecase`
+                    herbarium.usecases.get(usecaseName).metadata({ REST: { version: '' } })
+
+                    // when
+                    populateMetadata({ herbarium })
+
+                    // then
+                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    assert.equal(metadata.method, 'GET')
+                    assert.equal(metadata.resource, 'readEntities')
+                    assert.equal(metadata.path, '/readEntities/:id')
+                })
             })
         })
     })
