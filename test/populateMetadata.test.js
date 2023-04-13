@@ -61,9 +61,9 @@ describe('populateMetadata', () => {
             populateMetadata({ herbarium, controller: appDefaultController })
 
             // then
-            const metadata1 = herbarium.usecases.get('ReadUsecase').REST
+            const [metadata1] = herbarium.usecases.get('ReadUsecase').REST
             assert.deepStrictEqual(metadata1.controller(), 2)
-            const metadata2 = herbarium.usecases.get('UpdateUsecase').REST
+            const [metadata2] = herbarium.usecases.get('UpdateUsecase').REST
             assert.deepStrictEqual(metadata2.controller(), 2)
         })
     })
@@ -80,9 +80,9 @@ describe('populateMetadata', () => {
             populateMetadata({ herbarium, version: 'v1' })
 
             // then
-            const metadata1 = herbarium.usecases.get('ReadUsecase').REST
+            const [metadata1] = herbarium.usecases.get('ReadUsecase').REST
             assert.deepStrictEqual(metadata1.version, 'v1')
-            const metadata2 = herbarium.usecases.get('UpdateUsecase').REST
+            const [metadata2] = herbarium.usecases.get('UpdateUsecase').REST
             assert.deepStrictEqual(metadata2.version, 'v1')
         })
     })
@@ -102,7 +102,7 @@ describe('populateMetadata', () => {
             populateMetadata({ herbarium, convention: newConvention })
 
             // then
-            const metadata = herbarium.usecases.get('ReadUsecase').REST
+            const [metadata] = herbarium.usecases.get('ReadUsecase').REST
             assert.equal(metadata.method, 'GET')
             assert.equal(metadata.resource, 'entityPlural')
             assert.equal(metadata.path, '/entityPlural/:id')
@@ -178,7 +178,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.version, '')
                     assert.equal(metadata.method, method)
                     assert.equal(metadata.resource, resource)
@@ -227,7 +227,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
 
                     assert.equal(metadata.version, '')
                     assert.equal(metadata.method, method)
@@ -254,7 +254,7 @@ describe('populateMetadata', () => {
 
                 // then
                 const usecaseName = `${operation}Usecase`
-                metadata = herbarium.usecases.get(usecaseName).REST
+                const [metadata] = herbarium.usecases.get(usecaseName).REST
                 assert.equal(metadata.resource, 'readEntities')
             })
             it('with entity and no group', () => {
@@ -269,7 +269,7 @@ describe('populateMetadata', () => {
 
                 // then
                 const usecaseName = `${operation}Usecase`
-                metadata = herbarium.usecases.get(usecaseName).REST
+                const [metadata] = herbarium.usecases.get(usecaseName).REST
                 assert.equal(metadata.resource, 'readEntities')
             })
             it('with no entity and group', () => {
@@ -284,7 +284,7 @@ describe('populateMetadata', () => {
 
                 // then
                 const usecaseName = `${operation}Usecase`
-                metadata = herbarium.usecases.get(usecaseName).REST
+                const [metadata] = herbarium.usecases.get(usecaseName).REST
                 assert.equal(metadata.resource, 'theGroups')
             })
             it('with no entity and no group', () => {
@@ -316,7 +316,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { params: { idName: Number }, query: { name: String } })
                     assert.equal(metadata.path, '/readEntities/:idName')
                 })
@@ -334,7 +334,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { query: { id: Number, name: String } })
                     assert.equal(metadata.path, '/readEntities')
                 })
@@ -352,7 +352,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { params: { id1: Number, id2: Number }, query: { name: String } })
                     assert.equal(metadata.path, '/readEntities/:id1/:id2')
                 })
@@ -370,7 +370,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { params: { id1: Number }, query: { id3: Number, name: String } })
                     assert.equal(metadata.path, '/readEntities/:id1')
                 })
@@ -408,7 +408,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { params: { id: Number }, query: { name: String, age: Number, isAdult: Boolean, birthDate: Date, address: Object, hobbies: Array } })
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
@@ -444,7 +444,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { params: { id: [Number] }, query: { name: [String], age: [Number], isAdult: [Boolean], birthDate: [Date], address: [Object], hobbies: [Array] } })
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
@@ -477,7 +477,7 @@ describe('populateMetadata', () => {
 
                     // then
                     const usecaseName = `${operation}Usecase`
-                    metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.deepEqual(metadata.parameters, { params: { id: Number }, query: { name: String, entity: entity2 } })
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
@@ -492,13 +492,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { version: 'v2' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ version: 'v2' }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/v2/readEntities/:id')
@@ -511,13 +511,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { version: '' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ version: '' }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities/:id')
@@ -536,13 +536,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { resource: 'overriddenResource' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ resource: 'overriddenResource' }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'overriddenResource')
                     assert.equal(metadata.path, '/overriddenResource/:id')
@@ -559,13 +559,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { method: 'POST' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ method: 'POST' }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'POST')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities')
@@ -580,7 +580,7 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { method: 'INVALID' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ method: 'INVALID' }] })
 
                     // when
                     // then
@@ -597,13 +597,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { path: '/overriddenPath' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ path: '/overriddenPath' }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/overriddenPath')
@@ -619,13 +619,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { controller: () => 1 } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ controller: () => 1 }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities/:id')
@@ -641,13 +641,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { parameters: { query: { id1: Number } } } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ parameters: { query: { id1: Number } } }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities')
@@ -662,7 +662,7 @@ describe('populateMetadata', () => {
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({
-                        REST: {
+                        REST: [{
                             parameters: {
                                 query: { id1: Number },
                                 params: { id2: String },
@@ -675,14 +675,14 @@ describe('populateMetadata', () => {
                                 secure: { id9: Boolean },
                                 xhr: { id10: Date }
                             }
-                        }
+                        }]
                     })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities/:id2')
@@ -709,13 +709,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { parametersHandler: () => 1 } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ parametersHandler: () => 1 }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities/:id')
@@ -732,13 +732,13 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({ name: `${operation} Entity` })
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
-                    herbarium.usecases.get(usecaseName).metadata({ REST: { authorizationHandler: () => 'Jane' } })
+                    herbarium.usecases.get(usecaseName).metadata({ REST: [{ authorizationHandler: () => 'Jane' }] })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'GET')
                     assert.equal(metadata.resource, 'readEntities')
                     assert.equal(metadata.path, '/readEntities/:id')
@@ -757,21 +757,21 @@ describe('populateMetadata', () => {
                     anUseCase({ crud: operation, entity })
                     const usecaseName = `${operation}Usecase`
                     herbarium.usecases.get(usecaseName).metadata({
-                        REST: {
+                        REST: [{
                             method: 'POST',
                             path: '/overriddenPath',
                             resource: 'overriddenResource',
                             parameters: { cookie: { id1: Number } },
                             parametersHandler: () => 1,
                             controller: () => 1
-                        }
+                        }]
                     })
 
                     // when
                     populateMetadata({ herbarium })
 
                     // then
-                    const metadata = herbarium.usecases.get(usecaseName).REST
+                    const [metadata] = herbarium.usecases.get(usecaseName).REST
                     assert.equal(metadata.method, 'POST')
                     assert.equal(metadata.resource, 'overriddenResource')
                     assert.equal(metadata.path, '/overriddenPath')
@@ -780,6 +780,76 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.parametersHandler(), 1)
                 })
             })
+        })
+    })
+
+    describe('should populate multiples endpoints', () => {
+        it('with multiples endpoints', () => {
+            // given
+            herbarium.reset()
+            const operation = herbarium.crud.read
+            const { entity } = anEntity({ name: `${operation} Entity` })
+            anUseCase({ crud: operation, entity })
+            const usecaseName = `${operation}Usecase`
+            herbarium.usecases.get(usecaseName).metadata({
+                REST: [{ method: 'POST', resource: 'test' },
+                { method: 'GET' }]
+            })
+
+            // when
+            populateMetadata({ herbarium })
+
+            // then
+            const metadata = herbarium.usecases.get(usecaseName).REST
+            assert.equal(metadata[0].method, 'POST')
+            assert.equal(metadata[0].resource, 'test')
+            assert.equal(metadata[0].path, '/test')
+            assert.equal(typeof metadata[0].controller, 'function')
+            assert.equal(typeof metadata[0].parametersHandler, 'function')
+            assert.equal(typeof metadata[0].authorizationHandler, 'function')
+            assert.deepEqual(metadata[0].parameters, { body: { id: Number } })
+            assert.equal(metadata[1].method, 'GET')
+            assert.equal(metadata[1].resource, 'readEntities')
+            assert.equal(metadata[1].path, '/readEntities/:id')
+            assert.equal(typeof metadata[1].controller, 'function')
+            assert.equal(typeof metadata[1].parametersHandler, 'function')
+            assert.equal(typeof metadata[1].authorizationHandler, 'function')
+            assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
+
+        })
+
+        it('with multiples versions', () => {
+            // given
+            herbarium.reset()
+            const operation = herbarium.crud.read
+            const { entity } = anEntity({ name: `${operation} Entity` })
+            anUseCase({ crud: operation, entity })
+            const usecaseName = `${operation}Usecase`
+            herbarium.usecases.get(usecaseName).metadata({
+                REST: [
+                    { version: 'v1' },
+                    { version: 'v2' }]
+            })
+
+            // when
+            populateMetadata({ herbarium })
+
+            // then
+            const metadata = herbarium.usecases.get(usecaseName).REST
+            assert.equal(metadata[0].method, 'GET')
+            assert.equal(metadata[0].resource, 'readEntities')
+            assert.equal(metadata[0].path, '/v1/readEntities/:id')
+            assert.equal(typeof metadata[0].controller, 'function')
+            assert.equal(typeof metadata[0].parametersHandler, 'function')
+            assert.equal(typeof metadata[0].authorizationHandler, 'function')
+            assert.deepEqual(metadata[0].parameters, { params: { id: Number } })
+            assert.equal(metadata[1].method, 'GET')
+            assert.equal(metadata[1].resource, 'readEntities')
+            assert.equal(metadata[1].path, '/v2/readEntities/:id')
+            assert.equal(typeof metadata[1].controller, 'function')
+            assert.equal(typeof metadata[1].parametersHandler, 'function')
+            assert.equal(typeof metadata[1].authorizationHandler, 'function')
+            assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
         })
     })
 })

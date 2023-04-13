@@ -198,23 +198,32 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
         const group = info.group
         const ucRequest = { ...info.usecase().requestSchema }
 
-        const versioning = info?.REST?.version || version
+        // throw if REST is defined and is not an array
+        if (info?.REST && !Array.isArray(info.REST)) throw new Error(`Invalid REST metadata. The REST metadata for usecase ${ucName} is not an array.`)
 
-        const method = normalizeHTTPMethod(info?.REST?.method || convention.operationToMethod({ operation, entity, group }))
-        if (!method) throw new Error(`Invalid Method. It is not possible to populate the REST metadata for usecase ${ucName}. Please, check the method on the usecase metadata.`)
+        const REST = info?.REST || [{}]
 
-        const resource = info?.REST?.resource || convention.toResourceName({ entity, group, operation })
-        if (!resource) throw new Error(`Invalid Resource. It is not possible to generate a REST resource name for usecase ${ucName}. Please, add a group or entity to the usecase metadata.`)
+        for (let metadata of REST) {
 
-        const parameters = info?.REST?.parameters || convention.requestToParameters({ method, entity, request: ucRequest, group, operation })
-        const parametersHandler = info?.REST?.parametersHandler || convention.parametersHandler
+            const versioning = metadata?.version || version
 
-        const path = info?.REST?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity, group })
-        const ctlr = info?.REST?.controller || controller || convention.controller
+            const method = normalizeHTTPMethod(metadata?.method || convention.operationToMethod({ operation, entity, group }))
+            if (!method) throw new Error(`Invalid Method. It is not possible to populate the REST metadata for usecase ${ucName}. Please, check the method on the usecase metadata.`)
 
-        const authorizationHandler = info?.REST?.authorizationHandler || convention.authorizationHandler
+            const resource = metadata?.resource || convention.toResourceName({ entity, group, operation })
+            if (!resource) throw new Error(`Invalid Resource. It is not possible to generate a REST resource name for usecase ${ucName}. Please, add a group or entity to the usecase metadata.`)
 
-        info.metadata({ REST: { version: versioning, method, path, resource, parameters, parametersHandler, authorizationHandler, controller: ctlr } })
+            const parameters = metadata?.parameters || convention.requestToParameters({ method, entity, request: ucRequest, group, operation })
+            const parametersHandler = metadata?.parametersHandler || convention.parametersHandler
+
+            const path = metadata?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity, group })
+            const ctlr = metadata?.controller || controller || convention.controller
+
+            const authorizationHandler = metadata?.authorizationHandler || convention.authorizationHandler
+
+            metadata = Object.assign(metadata, { version: versioning, method, path, resource, parameters, parametersHandler, authorizationHandler, controller: ctlr })
+        }
+        info.metadata({ REST })
     }
 
 }

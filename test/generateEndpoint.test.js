@@ -2,6 +2,7 @@ const { herbarium } = require('@herbsjs/herbarium')
 const { usecase, step, Ok } = require('@herbsjs/herbs')
 const assert = require('assert').strict
 const { generateEndpoints } = require('../src/generateEndpoints')
+const { type } = require('os')
 
 describe('generateEndpoint', () => {
 
@@ -20,13 +21,12 @@ describe('generateEndpoint', () => {
 
     function aServer() {
         const server = {
-            get path() { return this._path },
-            get method() { return this._method },
-            get controller() { return this._controller },
-            get(path, controller) { this._path = path; this._method = 'GET'; this._controller = controller },
-            post(path, controller) { this._path = path; this._method = 'POST'; this._controller = controller },
-            put(path, controller) { this._path = path; this._method = 'PUT'; this._controller = controller },
-            delete(path, controller) { this._path = path; this._method = 'DELETE'; this._controller = controller }
+            _endpoints: [],
+            get endpoints() { return this._endpoints },
+            get(path, controller) { this._endpoints.push({ path, controller, method: 'GET' }) },
+            post(path, controller) { this._endpoints.push({ path, controller, method: 'POST' }) },
+            put(path, controller) { this._endpoints.push({ path, controller, method: 'PUT' }) },
+            delete(path, controller) { this._endpoints.push({ path, controller, method: 'DELETE' }) },
         }
         return server
     }
@@ -38,14 +38,14 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'GET'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/readEntities/:id',
                     parameters: { params: { id1: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -53,9 +53,10 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then
-                assert.equal(server.path, '/readEntities/:id')
-                assert.equal(server.method, 'GET')
-                assert.deepEqual(await server.controller({ params: { id1: 1 } }), { id1: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
+                const { path, method: verb, controller } = server.endpoints[0]
+                assert.equal(path, '/readEntities/:id')
+                assert.equal(verb, 'GET')
+                assert.deepEqual(await controller({ params: { id1: 1 } }), { id1: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
 
             it('for a GET (all)', async () => {
@@ -63,14 +64,14 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'GET'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/readEntities',
                     parameters: { query: { id1: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.query.id1, usecaseDesc: usecase().description, user: authorizationInfo })
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -78,9 +79,10 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then
-                assert.equal(server.path, '/readEntities')
-                assert.equal(server.method, 'GET')
-                assert.deepEqual(await server.controller({ query: { id1: 1 } }), { id1: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
+                const { path, method: verb, controller } = server.endpoints[0]
+                assert.equal(path, '/readEntities')
+                assert.equal(verb, 'GET')
+                assert.deepEqual(await controller({ query: { id1: 1 } }), { id1: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
 
             it('for a POST', async () => {
@@ -88,14 +90,14 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'POST'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/createEntities',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ usecase, request, authorizationInfo }) => ({ name: request.req.body.name, usecaseDesc: usecase().description, user: authorizationInfo })
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -103,9 +105,10 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then
-                assert.equal(server.path, '/createEntities')
-                assert.equal(server.method, 'POST')
-                assert.deepEqual(await server.controller({ body: { name: 'Jane' } }), { name: 'Jane', usecaseDesc: `${method} Usecase`, user: 'Bob' })
+                const { path, method: verb, controller } = server.endpoints[0]
+                assert.equal(path, '/createEntities')
+                assert.equal(method, 'POST')
+                assert.deepEqual(await controller({ body: { name: 'Jane' } }), { name: 'Jane', usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
 
             it('for a PUT', async () => {
@@ -113,14 +116,14 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'PUT'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/updateEntities/:id',
                     parameters: { params: { id: Number }, body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ usecase, request, authorizationInfo }) => ({ id: request.req.params.id, name: request.req.body.name, usecaseDesc: usecase().description, user: authorizationInfo })
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -128,9 +131,10 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then
-                assert.equal(server.path, '/updateEntities/:id')
-                assert.equal(server.method, 'PUT')
-                assert.deepEqual(await server.controller({ params: { id: 1 }, body: { name: 'Jane' } }), { id: 1, name: 'Jane', usecaseDesc: `${method} Usecase`, user: 'Bob' })
+                const { path, method: verb, controller } = server.endpoints[0]
+                assert.equal(path, '/updateEntities/:id')
+                assert.equal(method, 'PUT')
+                assert.deepEqual(await controller({ params: { id: 1 }, body: { name: 'Jane' } }), { id: 1, name: 'Jane', usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
 
             it('for a DELETE', async () => {
@@ -138,14 +142,14 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ usecase, request, authorizationInfo }) => ({ id: request.req.params.id, usecaseDesc: usecase().description, user: authorizationInfo })
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -153,9 +157,10 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then
-                assert.equal(server.path, '/deleteEntities/:id')
-                assert.equal(server.method, 'DELETE')
-                assert.deepEqual(await server.controller({ params: { id: 1 } }), { id: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
+                const { path, method: verb, controller } = server.endpoints[0]
+                assert.equal(path, '/deleteEntities/:id')
+                assert.equal(method, 'DELETE')
+                assert.deepEqual(await controller({ params: { id: 1 } }), { id: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
         })
     })
@@ -176,12 +181,13 @@ describe('generateEndpoint', () => {
                 assert.equal(server.method, undefined)
                 assert.equal(server.controller, undefined)
             })
-            it('when the use case has an empty REST', () => {
+
+            it('when the use case has an empty REST metadata', () => {
                 // given
                 herbarium.reset()
                 const method = 'GET'
                 anUseCase({ method })
-                const REST = {}
+                const REST = [{}]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -199,13 +205,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ }) => { }
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -218,13 +224,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ }) => { }
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -237,13 +243,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/deleteEntities/:id',
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ }) => { }
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -257,13 +263,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     controller: () => { }
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -276,13 +282,13 @@ describe('generateEndpoint', () => {
                 herbarium.reset()
                 const method = 'DELETE'
                 anUseCase({ method })
-                const REST = {
+                const REST = [{
                     method,
                     path: '/deleteEntities/:id',
                     parameters: { params: { id: Number } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
-                }
+                }]
                 herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
@@ -293,6 +299,50 @@ describe('generateEndpoint', () => {
         })
     })
 
+    describe('when a use case has many REST metadata', () => {
+        it('should generate the endpoints', async () => {
+            // given
+            herbarium.reset()
+            const method = 'GET'
+            anUseCase({ method })
+            const REST = [{
+                method,
+                path: '/readEntities/:id',
+                parameters: { params: { id1: Number } },
+                parametersHandler: (req, parameters) => ({ req, parameters }),
+                authorizationHandler: (_) => 'Bob',
+                controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
+            },
+            {
+                method: 'POST',
+                path: '/readEntitiesTest',
+                parameters: { body: { name: Number } },
+                parametersHandler: (req, parameters) => ({ req, parameters }),
+                authorizationHandler: (_) => 'Jhon',
+                controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
+            }]
+            herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+            const server = aServer()
+
+            // when
+            generateEndpoints({ herbarium, server })
+
+            // then
+            const { path: path1, method: verb1, controller: controller1 } = server.endpoints[0]
+            const { path: path2, method: verb2, controller: controller2 } = server.endpoints[1]
+
+            assert.equal(path1, '/readEntities/:id')
+            assert.equal(verb1, 'GET')
+            assert.deepEqual(await controller1({ params: { id1: 1 } }), { id1: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
+            assert.equal(path2, '/readEntitiesTest')
+            assert.equal(verb2, 'POST')
+            assert.deepEqual(await controller2({ params: { id1: 1 } }), { id1: 1, usecaseDesc: `${method} Usecase`, user: 'Jhon' })
+
+        })
+
+    })
+
+
     describe('when a more than one use case has the same endpoint (method and path)', () => {
         it('should throw an error', () => {
             // given
@@ -301,24 +351,24 @@ describe('generateEndpoint', () => {
             anUseCase({ method: 'POST' })
             const server = aServer()
             herbarium.usecases.get(`GETUsecase`).metadata({
-                REST: {
+                REST: [{
                     method: 'GET',
                     path: '/samePath',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: () => { }
-                }
+                }]
             })
             herbarium.usecases.get(`POSTUsecase`).metadata({
-                REST: {
+                REST: [{
                     method: 'GET',
                     path: '/samePath',
                     parameters: { body: { name: String } },
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                     controller: () => { }
-                }
+                }]
             })
 
             // when
