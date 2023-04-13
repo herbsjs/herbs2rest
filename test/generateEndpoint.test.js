@@ -2,7 +2,6 @@ const { herbarium } = require('@herbsjs/herbarium')
 const { usecase, step, Ok } = require('@herbsjs/herbs')
 const assert = require('assert').strict
 const { generateEndpoints } = require('../src/generateEndpoints')
-const { type } = require('os')
 
 describe('generateEndpoint', () => {
 
@@ -107,7 +106,7 @@ describe('generateEndpoint', () => {
                 // then
                 const { path, method: verb, controller } = server.endpoints[0]
                 assert.equal(path, '/createEntities')
-                assert.equal(method, 'POST')
+                assert.equal(verb, 'POST')
                 assert.deepEqual(await controller({ body: { name: 'Jane' } }), { name: 'Jane', usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
 
@@ -133,7 +132,7 @@ describe('generateEndpoint', () => {
                 // then
                 const { path, method: verb, controller } = server.endpoints[0]
                 assert.equal(path, '/updateEntities/:id')
-                assert.equal(method, 'PUT')
+                assert.equal(verb, 'PUT')
                 assert.deepEqual(await controller({ params: { id: 1 }, body: { name: 'Jane' } }), { id: 1, name: 'Jane', usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
 
@@ -159,7 +158,7 @@ describe('generateEndpoint', () => {
                 // then
                 const { path, method: verb, controller } = server.endpoints[0]
                 assert.equal(path, '/deleteEntities/:id')
-                assert.equal(method, 'DELETE')
+                assert.equal(verb, 'DELETE')
                 assert.deepEqual(await controller({ params: { id: 1 } }), { id: 1, usecaseDesc: `${method} Usecase`, user: 'Bob' })
             })
         })
