@@ -73,4 +73,6 @@ function generateEndpoints({ herbarium, server, convention = defaultConvention }
     }
 }
 
-module.exports = { generateEndpoints, convention: defaultConvention }
+generateEndpoints.convention = defaultConvention
+
+module.exports = { generateEndpoints }

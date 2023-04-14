@@ -1,7 +1,7 @@
 const { herbarium } = require('@herbsjs/herbarium')
 const { entity, id, field } = require('@herbsjs/herbs')
 const { usecase, step, Ok } = require('@herbsjs/herbs')
-const { populateMetadata, convention } = require('../src/populateMetadata.js')
+const { populateMetadata } = require('../src/populateMetadata.js')
 const assert = require('assert').strict
 
 describe('populateMetadata', () => {
@@ -95,7 +95,7 @@ describe('populateMetadata', () => {
             anUseCase({ crud: herbarium.crud.read, entity })
 
             // clone the default convention and change the toPlural method
-            const newConvention = Object.assign({}, convention)
+            const newConvention = Object.assign({}, populateMetadata.convention)
             newConvention.toPlural = (name) => name.toLowerCase() + ' plural'
 
             // when

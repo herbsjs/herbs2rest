@@ -176,8 +176,9 @@ const defaultConvention = {
 /**
  * Populate the REST metadata in the use cases of the herbarium based on the convention
  * @param {Object} options
- * @param {Herbarium} options.herbarium - Herbarium instance containing the use cases
+ * @param {Herbarium} options.herbarium - Herbarium instance containing the use cases (required)
  * @param {Object} options.controller - Controller function to be used in all endpoints generated
+ * @param {String} options.version - Version to be used in all endpoints generated
  * @param {Object} options.convention - Convention to be used to populate the metadata and generate the endpoints
  * @returns {Herbarium} - Herbarium instance with the REST metadata populated
  */
@@ -231,4 +232,6 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
 
 }
 
-module.exports = { populateMetadata, convention: defaultConvention }
+populateMetadata.convention = defaultConvention
+
+module.exports = { populateMetadata }
