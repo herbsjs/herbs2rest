@@ -1,3 +1,10 @@
+# [4.1.0-beta.4](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2023-04-14)
+
+
+### Bug Fixes
+
+* **core:** change the way to expose the conventions ([e776cde](https://github.com/herbsjs/herbs2rest/commit/e776cdec05316b783435581c4b4d597a84c9c114))
+
 # [4.1.0-beta.3](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2023-04-14)
 
 
