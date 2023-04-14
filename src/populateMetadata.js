@@ -201,7 +201,10 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
         // throw if REST is defined and is not an array
         if (info?.REST && !Array.isArray(info.REST)) throw new Error(`Invalid REST metadata. The REST metadata for usecase ${ucName} is not an array.`)
 
-        const REST = info?.REST || [{}]
+        const REST = info?.REST || []
+
+        // if the REST array has no elements with the version passed, add a entry with the version
+        if (!REST.some(metadata => metadata.version === version)) REST.push({ version })
 
         for (let metadata of REST) {
 

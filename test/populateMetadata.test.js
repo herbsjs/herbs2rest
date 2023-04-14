@@ -781,75 +781,116 @@ describe('populateMetadata', () => {
                 })
             })
         })
-    })
 
-    describe('should populate multiples endpoints', () => {
-        it('with multiples endpoints', () => {
-            // given
-            herbarium.reset()
-            const operation = herbarium.crud.read
-            const { entity } = anEntity({ name: `${operation} Entity` })
-            anUseCase({ crud: operation, entity })
-            const usecaseName = `${operation}Usecase`
-            herbarium.usecases.get(usecaseName).metadata({
-                REST: [{ method: 'POST', resource: 'test' },
-                { method: 'GET' }]
+        describe('should populate multiples endpoints', () => {
+            it('with multiples endpoints', () => {
+                // given
+                herbarium.reset()
+                const operation = herbarium.crud.read
+                const { entity } = anEntity({ name: `${operation} Entity` })
+                anUseCase({ crud: operation, entity })
+                const usecaseName = `${operation}Usecase`
+                herbarium.usecases.get(usecaseName).metadata({
+                    REST: [{ method: 'POST', resource: 'test' },
+                    { method: 'GET' }]
+                })
+
+                // when
+                populateMetadata({ herbarium })
+
+                // then
+                const metadata = herbarium.usecases.get(usecaseName).REST
+                assert.equal(metadata[0].method, 'POST')
+                assert.equal(metadata[0].resource, 'test')
+                assert.equal(metadata[0].path, '/test')
+                assert.equal(typeof metadata[0].controller, 'function')
+                assert.equal(typeof metadata[0].parametersHandler, 'function')
+                assert.equal(typeof metadata[0].authorizationHandler, 'function')
+                assert.deepEqual(metadata[0].parameters, { body: { id: Number } })
+                assert.equal(metadata[1].method, 'GET')
+                assert.equal(metadata[1].resource, 'readEntities')
+                assert.equal(metadata[1].path, '/readEntities/:id')
+                assert.equal(typeof metadata[1].controller, 'function')
+                assert.equal(typeof metadata[1].parametersHandler, 'function')
+                assert.equal(typeof metadata[1].authorizationHandler, 'function')
+                assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
+
             })
 
-            // when
-            populateMetadata({ herbarium })
+            it('with multiples versions', () => {
+                // given
+                herbarium.reset()
+                const operation = herbarium.crud.read
+                const { entity } = anEntity({ name: `${operation} Entity` })
+                anUseCase({ crud: operation, entity })
+                const usecaseName = `${operation}Usecase`
+                herbarium.usecases.get(usecaseName).metadata({
+                    REST: [
+                        { version: 'v1' },
+                        { version: 'v2' }]
+                })
 
-            // then
-            const metadata = herbarium.usecases.get(usecaseName).REST
-            assert.equal(metadata[0].method, 'POST')
-            assert.equal(metadata[0].resource, 'test')
-            assert.equal(metadata[0].path, '/test')
-            assert.equal(typeof metadata[0].controller, 'function')
-            assert.equal(typeof metadata[0].parametersHandler, 'function')
-            assert.equal(typeof metadata[0].authorizationHandler, 'function')
-            assert.deepEqual(metadata[0].parameters, { body: { id: Number } })
-            assert.equal(metadata[1].method, 'GET')
-            assert.equal(metadata[1].resource, 'readEntities')
-            assert.equal(metadata[1].path, '/readEntities/:id')
-            assert.equal(typeof metadata[1].controller, 'function')
-            assert.equal(typeof metadata[1].parametersHandler, 'function')
-            assert.equal(typeof metadata[1].authorizationHandler, 'function')
-            assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
+                // when
+                populateMetadata({ herbarium })
 
-        })
-
-        it('with multiples versions', () => {
-            // given
-            herbarium.reset()
-            const operation = herbarium.crud.read
-            const { entity } = anEntity({ name: `${operation} Entity` })
-            anUseCase({ crud: operation, entity })
-            const usecaseName = `${operation}Usecase`
-            herbarium.usecases.get(usecaseName).metadata({
-                REST: [
-                    { version: 'v1' },
-                    { version: 'v2' }]
+                // then
+                const metadata = herbarium.usecases.get(usecaseName).REST
+                assert.equal(metadata[0].method, 'GET')
+                assert.equal(metadata[0].resource, 'readEntities')
+                assert.equal(metadata[0].path, '/v1/readEntities/:id')
+                assert.equal(typeof metadata[0].controller, 'function')
+                assert.equal(typeof metadata[0].parametersHandler, 'function')
+                assert.equal(typeof metadata[0].authorizationHandler, 'function')
+                assert.deepEqual(metadata[0].parameters, { params: { id: Number } })
+                assert.equal(metadata[1].method, 'GET')
+                assert.equal(metadata[1].resource, 'readEntities')
+                assert.equal(metadata[1].path, '/v2/readEntities/:id')
+                assert.equal(typeof metadata[1].controller, 'function')
+                assert.equal(typeof metadata[1].parametersHandler, 'function')
+                assert.equal(typeof metadata[1].authorizationHandler, 'function')
+                assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
             })
 
-            // when
-            populateMetadata({ herbarium })
+            it('with multiples endpoints and a default version', () => {
+                // given
+                herbarium.reset()
+                const operation = herbarium.crud.read
+                const { entity } = anEntity({ name: `${operation} Entity` })
+                anUseCase({ crud: operation, entity })
+                const usecaseName = `${operation}Usecase`
+                herbarium.usecases.get(usecaseName).metadata({
+                    REST: [{ version: 'v1', method: 'POST', resource: 'test' },
+                    { version: 'v2', method: 'DELETE', resource: 'test2' }]
+                })
 
-            // then
-            const metadata = herbarium.usecases.get(usecaseName).REST
-            assert.equal(metadata[0].method, 'GET')
-            assert.equal(metadata[0].resource, 'readEntities')
-            assert.equal(metadata[0].path, '/v1/readEntities/:id')
-            assert.equal(typeof metadata[0].controller, 'function')
-            assert.equal(typeof metadata[0].parametersHandler, 'function')
-            assert.equal(typeof metadata[0].authorizationHandler, 'function')
-            assert.deepEqual(metadata[0].parameters, { params: { id: Number } })
-            assert.equal(metadata[1].method, 'GET')
-            assert.equal(metadata[1].resource, 'readEntities')
-            assert.equal(metadata[1].path, '/v2/readEntities/:id')
-            assert.equal(typeof metadata[1].controller, 'function')
-            assert.equal(typeof metadata[1].parametersHandler, 'function')
-            assert.equal(typeof metadata[1].authorizationHandler, 'function')
-            assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
+                // when
+                populateMetadata({ herbarium, version: 'v3' })
+
+                // then
+                const metadata = herbarium.usecases.get(usecaseName).REST
+                assert.equal(metadata[0].method, 'POST')
+                assert.equal(metadata[0].resource, 'test')
+                assert.equal(metadata[0].path, '/v1/test')
+                assert.equal(typeof metadata[0].controller, 'function')
+                assert.equal(typeof metadata[0].parametersHandler, 'function')
+                assert.equal(typeof metadata[0].authorizationHandler, 'function')
+                assert.deepEqual(metadata[0].parameters, { body: { id: Number } })
+                assert.equal(metadata[1].method, 'DELETE')
+                assert.equal(metadata[1].resource, 'test2')
+                assert.equal(metadata[1].path, '/v2/test2/:id')
+                assert.equal(typeof metadata[1].controller, 'function')
+                assert.equal(typeof metadata[1].parametersHandler, 'function')
+                assert.equal(typeof metadata[1].authorizationHandler, 'function')
+                assert.deepEqual(metadata[1].parameters, { params: { id: Number } })
+                assert.equal(metadata[2].method, 'GET')
+                assert.equal(metadata[2].resource, 'readEntities')
+                assert.equal(metadata[2].path, '/v3/readEntities/:id')
+                assert.equal(typeof metadata[2].controller, 'function')
+                assert.equal(typeof metadata[2].parametersHandler, 'function')
+                assert.equal(typeof metadata[2].authorizationHandler, 'function')
+                assert.deepEqual(metadata[2].parameters, { params: { id: Number } })
+
+            })
         })
     })
 })

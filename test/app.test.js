@@ -62,7 +62,7 @@ function aResponse() {
     }
 }
 
-describe('Herbs2REST App - Integration Test', () => {
+describe('An Herbs2REST App - Integration Test', () => {
     describe('With a simple use case', () => {
         describe('with success', () => {
             it('should create an endpoint for a use case and execute it', async () => {
@@ -226,6 +226,38 @@ describe('Herbs2REST App - Integration Test', () => {
                 assert.deepStrictEqual(next._called, undefined)
             })
 
+        })
+
+        describe('With multiple versions', () => {
+            it('should create multiple endpoints for a use case and execute it', async () => {
+                // given 
+                herbarium.reset()
+                const { entity } = anEntity({ name: 'TestEntity', fields: { id: id(Number), name: field(String), age: field(Number) } })
+                anUseCase({ entity, crud: herbarium.crud.update, request: { id: Number, name: String, age: Number }, stepReturn: (ctx) => { ctx.ret = { processed: true } } })
+                const server = aServer()
+
+                herbarium.usecases.get('UpdateUsecase').metadata({ REST: [{ version: 'v3' }] })
+
+                // when - setup 
+                populateMetadata({ herbarium, version: 'v1' })
+                populateMetadata({ herbarium, version: 'v2' })
+                generateEndpoints({ herbarium, server })
+
+                // when - execute for each version
+                for (const endpoint of server.endpoints) {
+                    const expressController = endpoint.controller
+
+                    const req = { params: { id: '1' }, body: { name: 'John', age: 20 } }
+                    const res = aResponse()
+                    const next = function () { this._called = true }
+                    await expressController(req, res, next)
+                    // then 
+                    assert.deepStrictEqual(res._status, 200)
+                    assert.deepStrictEqual(res._data, { processed: true })
+                    assert.deepStrictEqual(next._called, undefined)
+                }
+
+            })
         })
 
     })
