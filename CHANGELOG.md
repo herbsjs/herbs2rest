@@ -1,3 +1,10 @@
+# [4.1.0-beta.3](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2023-04-14)
+
+
+### Features
+
+* **core:** multiple calls of populateMetadata with different versions creates multiple endpoints ([e105d05](https://github.com/herbsjs/herbs2rest/commit/e105d056143de680f5f66f4ad74961c49c06f6e7))
+
 # [4.1.0-beta.2](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2023-04-13)
 
 
