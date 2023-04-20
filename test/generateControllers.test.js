@@ -189,7 +189,11 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
 
     herbarium.usecases
       .add(crudOperation('Create'), 'CreateUsecase')
-      .metadata({ group: 'Test', operation: herbarium.crud.create, entity: Test })
+      .metadata({
+        group: 'Test', operation: herbarium.crud.create, entity: Test, REST: {
+          post: '/custompost'
+        }
+      })
 
     herbarium.usecases
       .add(crudOperation('Update'), 'UpdateUsecase')
@@ -238,7 +242,7 @@ describe('Herbs2Rest - Generate Custom Routes With Herbarium', () => {
 
     // Then
     request(app.use(routes))
-      .post('/test')
+      .post('/custompost')
       .expect(200, done)
   })
 
