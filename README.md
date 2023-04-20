@@ -130,6 +130,49 @@ const testUseCase = (injection) =>
   })
 ```
 
+
+#### Custom Endpoints
+
+You can configure custom REST endpoints and HTTP verbs for your use cases by modifying the `metadata` object of the use case. To do this, include a `REST` key in the metadata, containing a JavaScript object with the HTTP verb as the key and the desired path as the value.
+
+Supported HTTP verbs are: `get`, `post`, `put`, and `delete`.
+
+The path should be a string starting with a forward slash (`/`), followed by the desired path.
+
+Example:
+
+```javascript
+module.exports = 
+  herbarium.usecases
+    .add(createUser, 'CreateUser')
+    .metadata({
+      group: 'User',
+      operation: herbarium.crud.create,
+      entity: User,
+      REST: { post: '/createuser' } // Changes from POST /User to POST /createuser
+    }) 
+    .usecase
+```
+
+You can also change only the `resourceName` by providing a string inside the `REST` object. This will update the default route for the use case.
+
+Example:
+
+```javascript
+module.exports = 
+  herbarium.usecases
+    .add(createUser, 'CreateUser')
+    .metadata({
+      group: 'User',
+      operation: herbarium.crud.create,
+      entity: User,
+      REST: { resourceName: 'customer' } // Changes from POST /User to POST /customer
+    })
+    .usecase
+```
+
+By using custom endpoints and verbs, you can create a more flexible API that better suits your application's needs. This allows for more intuitive paths and better organization of your API resources.
+
 ---
 
 #### Example
