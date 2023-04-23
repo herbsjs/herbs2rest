@@ -1,3 +1,10 @@
+# [4.1.0-beta.5](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2023-04-23)
+
+
+### Features
+
+* allow the controller handlers to be asynchronous ([549826f](https://github.com/herbsjs/herbs2rest/commit/549826f5442bbb944d89fe17dba3c388c0339a74))
+
 # [4.1.0-beta.4](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2023-04-14)
 
 
