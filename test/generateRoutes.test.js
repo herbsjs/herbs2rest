@@ -88,95 +88,95 @@ describe('Herbs2Rest - Generate Routes', () => {
     request(app.use(routes))
       .get('/lists/1')
       .expect(200, done)
-  }),
+  })
 
-    it('Should resolve and create a get wihout id route', (done) => {
-      // Given
-      const app = express()
-      const routes = new express.Router()
+  it('Should resolve and create a get wihout id route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
 
-      const controllerList = [
-        {
-          name: 'lists',
-          entity: entityTestWithoutId,
-          getById: { usecase: usecaseTest, controller: defaultController }
-        },
-      ]
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: entityTestWithoutId,
+        getById: { usecase: usecaseTest, controller: defaultController }
+      },
+    ]
 
-      // When
-      generateRoutes(controllerList, routes)
+    // When
+    generateRoutes(controllerList, routes)
 
-      // Then
-      request(app.use(routes))
-        .get('/lists/1')
-        .expect(200, done)
-    }),
+    // Then
+    request(app.use(routes))
+      .get('/lists/1')
+      .expect(200, done)
+  })
 
-    it('Should resolve and create a post route', (done) => {
-      // Given
-      const app = express()
-      const routes = new express.Router()
+  it('Should resolve and create a post route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
 
-      const controllerList = [
-        {
-          name: 'lists',
-          entity: entityTest,
-          post: { usecase: usecaseTest, controller: defaultController }
-        },
-      ]
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: entityTest,
+        post: { usecase: usecaseTest, controller: defaultController }
+      },
+    ]
 
-      // When
-      generateRoutes(controllerList, routes)
+    // When
+    generateRoutes(controllerList, routes)
 
-      // Then
-      request(app.use(routes))
-        .post('/lists')
-        .expect(200, done)
-    }),
+    // Then
+    request(app.use(routes))
+      .post('/lists')
+      .expect(200, done)
+  })
 
-    it('Should resolve and create a put route', (done) => {
-      // Given
-      const app = express()
-      const routes = new express.Router()
+  it('Should resolve and create a put route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
 
-      const controllerList = [
-        {
-          name: 'lists',
-          entity: entityTest,
-          put: { usecase: usecaseTest, controller: defaultController }
-        },
-      ]
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: entityTest,
+        put: { usecase: usecaseTest, controller: defaultController }
+      },
+    ]
 
-      // When
-      generateRoutes(controllerList, routes)
+    // When
+    generateRoutes(controllerList, routes)
 
-      // Then
-      request(app.use(routes))
-        .put('/lists/1')
-        .expect(200, done)
-    }),
+    // Then
+    request(app.use(routes))
+      .put('/lists/1')
+      .expect(200, done)
+  })
 
-    it('Should resolve and create a delete route', (done) => {
-      // Given
-      const app = express()
-      const routes = new express.Router()
+  it('Should resolve and create a delete route', (done) => {
+    // Given
+    const app = express()
+    const routes = new express.Router()
 
-      const controllerList = [
-        {
-          name: 'lists',
-          entity: entityTest,
-          delete: { usecase: usecaseTest, controller: defaultController }
-        },
-      ]
+    const controllerList = [
+      {
+        name: 'lists',
+        entity: entityTest,
+        delete: { usecase: usecaseTest, controller: defaultController }
+      },
+    ]
 
-      // When
-      generateRoutes(controllerList, routes)
+    // When
+    generateRoutes(controllerList, routes)
 
-      // Then
-      request(app.use(routes))
-        .del('/lists/1')
-        .expect(200, done)
-    })
+    // Then
+    request(app.use(routes))
+      .del('/lists/1')
+      .expect(200, done)
+  })
 
   it('Should throw a JavascriptError if controllersList is null', () => {
     assert.rejects(() => generateRoutes(null, routes))
