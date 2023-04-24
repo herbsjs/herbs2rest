@@ -1,3 +1,17 @@
+# [4.1.0](https://github.com/herbsjs/herbs2rest/compare/v4.0.0...v4.1.0) (2023-04-24)
+
+
+### Features
+
+* **generateroutes.js:** verb and Path change ([303fdf5](https://github.com/herbsjs/herbs2rest/commit/303fdf5e6c10b0458b55b89cfee5b5d977ed9215))
+* **generateroutes:** added default verb for usecases other ([01c4a6a](https://github.com/herbsjs/herbs2rest/commit/01c4a6ab23119e1a176d3498d3428fc2c65c7022))
+* **generateroutes:** added support for custom resourceName ([61f3324](https://github.com/herbsjs/herbs2rest/commit/61f33248ba546614be9428a67ee6fc66363908c5))
+* **generateroutes:** endpoint logic change and minor changes ([8cee0f7](https://github.com/herbsjs/herbs2rest/commit/8cee0f76bc91d60e346f5ce1ff6c9e08c8031db4))
+* **generateroutes:** id field option should be passed by usecase in case of custom endpoint ([8c90860](https://github.com/herbsjs/herbs2rest/commit/8c908602e34af1cd77061b1bcb47e67f0037e2a0))
+* **generateroutes:** others endpoints should have request ([4f20391](https://github.com/herbsjs/herbs2rest/commit/4f203913fc83a7a3f5e68cc5f20be3513238d04a))
+* group custom endpoints and routes for crud.other ([dd1d20e](https://github.com/herbsjs/herbs2rest/commit/dd1d20ec356edb8fae1effa858b8a862f789597f))
+* should customize REST endpoints ([61e8944](https://github.com/herbsjs/herbs2rest/commit/61e894431311084e33717e0ee53b8c9819ec6b96))
+
 # [4.0.0](https://github.com/herbsjs/herbs2rest/compare/v3.2.4...v4.0.0) (2023-03-07)
 
 
