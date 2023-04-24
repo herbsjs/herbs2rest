@@ -1,3 +1,10 @@
+## [4.1.1](https://github.com/herbsjs/herbs2rest/compare/v4.1.0...v4.1.1) (2023-04-24)
+
+
+### Performance Improvements
+
+* **generateroutes:** improved readability for getForcedPath and getVerb ([ed884b0](https://github.com/herbsjs/herbs2rest/commit/ed884b009620dc05f44d19c12d87bf19acdd4a31))
+
 # [4.1.0](https://github.com/herbsjs/herbs2rest/compare/v4.0.0...v4.1.0) (2023-04-24)
 
 
