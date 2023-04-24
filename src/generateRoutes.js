@@ -112,28 +112,28 @@ function generateRoutes(routes, app, endpointInfo = false) {
 }
 
 function getForcedPath(route) {
-  const forcedPaths = {};
+  const forcedPaths = {}
 
-  const actions = ['getAll', 'getById', 'post', 'put', 'delete'];
+  const actions = ['getAll', 'getById', 'post', 'put', 'delete']
 
   actions.forEach(action => {
-    const verb = getVerb(route[action]?.REST);
+    const verb = getVerb(route[action]?.REST)
     if (verb) {
       forcedPaths[action] = {
         verb,
         path: route[action].REST[verb]
-      };
+      }
     }
-  });
+  })
 
-  return forcedPaths;
+  return forcedPaths
 }
 
 function getVerb(REST) {
-  if (!REST) return undefined;
+  if (!REST) return undefined
 
-  const validVerbs = ['get', 'post', 'put', 'delete'];
-  return Object.keys(REST).find(key => validVerbs.includes(key));
+  const validVerbs = ['get', 'post', 'put', 'delete']
+  return Object.keys(REST).find(key => validVerbs.includes(key))
 }
 
 module.exports = generateRoutes
