@@ -114,73 +114,26 @@ function generateRoutes(routes, app, endpointInfo = false) {
 function getForcedPath(route) {
   const forcedPaths = {}
 
-  const verbs = {
-    getAll: getVerb(route.getAll?.REST),
-    getById: getVerb(route.getById?.REST),
-    post: getVerb(route.post?.REST),
-    put: getVerb(route.put?.REST),
-    delete: getVerb(route.delete?.REST)
-  }
+  const actions = ['getAll', 'getById', 'post', 'put', 'delete']
 
-  if (verbs.getAll) {
-    const verb = verbs.getAll
-    const pathAndVerb = {
-      verb,
-      path: route.getAll.REST[verb]
+  actions.forEach(action => {
+    const verb = getVerb(route[action]?.REST)
+    if (verb) {
+      forcedPaths[action] = {
+        verb,
+        path: route[action].REST[verb]
+      }
     }
-    forcedPaths.getAll = pathAndVerb
-  }
-
-  if (verbs.getById) {
-    const verb = verbs.getById
-    const pathAndVerb = {
-      verb,
-      path: route.getById.REST[verb]
-    }
-    forcedPaths.getById = pathAndVerb
-  }
-
-  if (verbs.post) {
-    const verb = verbs.post
-    const pathAndVerb = {
-      verb,
-      path: route.post.REST[verb]
-    }
-    forcedPaths.post = pathAndVerb
-  }
-
-  if (verbs.put) {
-    const verb = verbs.put
-    const pathAndVerb = {
-      verb,
-      path: route.put.REST[verb]
-    }
-    forcedPaths.put = pathAndVerb
-  }
-
-  if (verbs.delete) {
-    const verb = verbs.delete
-    const pathAndVerb = {
-      verb,
-      path: route.delete.REST[verb]
-    }
-    forcedPaths.delete = pathAndVerb
-  }
+  })
 
   return forcedPaths
 }
 
 function getVerb(REST) {
-  if (REST != undefined) {
-    const keys = Object.keys(REST)
-    const verb = keys.find((key) => {
-      return (key == 'get' || key == 'post' || key == 'put' || key == 'delete')
-    })
+  if (!REST) return undefined
 
-    if (verb != undefined) return verb
-  }
-
-  return undefined
+  const validVerbs = ['get', 'post', 'put', 'delete']
+  return Object.keys(REST).find(key => validVerbs.includes(key))
 }
 
 module.exports = generateRoutes
