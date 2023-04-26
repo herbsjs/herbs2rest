@@ -1,3 +1,10 @@
+# [4.1.0-beta.6](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2023-04-26)
+
+
+### Features
+
+* **generateendpoint:** support more HTTP methods ([f1257dc](https://github.com/herbsjs/herbs2rest/commit/f1257dc3568a23c90f01362863a132b8b8cc0956))
+
 # [4.1.0-beta.5](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.4...v4.1.0-beta.5) (2023-04-23)
 
 
