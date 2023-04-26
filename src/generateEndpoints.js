@@ -65,10 +65,16 @@ function generateEndpoints({ herbarium, server, convention = defaultConvention }
 
             const expressController = convention.expressController({ usecase, parameters, parametersHandler: paramsHandler, authorizationHandler, controller: ctlr, method, path })
 
+            // 'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT'
             if (method === 'GET') server.get(path, expressController)
             if (method === 'POST') server.post(path, expressController)
             if (method === 'PUT') server.put(path, expressController)
             if (method === 'DELETE') server.delete(path, expressController)
+            if (method === 'PATCH') server.patch(path, expressController)
+            if (method === 'HEAD') server.head(path, expressController)
+            if (method === 'OPTIONS') server.options(path, expressController)
+            if (method === 'TRACE') server.trace(path, expressController)
+            if (method === 'CONNECT') server.connect(path, expressController)
         }
     }
 }

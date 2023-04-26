@@ -241,7 +241,7 @@ describe('populateMetadata', () => {
             })
         })
 
-        describe('Resource Name Conventio - Entity Name and Group', () => {
+        describe('Resource Name Convention - Entity Name and Group', () => {
             it('with entity and group', () => {
                 // given
                 herbarium.reset()
