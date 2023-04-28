@@ -31,7 +31,7 @@ const defaultConvention = {
      * @returns {Object} - Parameter value casted to the corresponding type
      */
     parametersCast(value, type) {
-        if (Array.isArray(type)) return value.map(item => defaultConvention.parametersCast(item, type[0]))
+        if (Array.isArray(type)) return value?.map(item => defaultConvention.parametersCast(item, type[0]))
         if (entity.isEntity(type)) return Object.assign(new type(), value)
         return tryParse(value, type)
     },
