@@ -1,3 +1,10 @@
+# [4.1.0-beta.7](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.6...v4.1.0-beta.7) (2023-04-28)
+
+
+### Bug Fixes
+
+* **populatemetadata:** fix parametersCast for undefined values on array types ([50ee481](https://github.com/herbsjs/herbs2rest/commit/50ee4819d107b31a49099e8a4b0fcf238b343f6e))
+
 # [4.1.0-beta.6](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.5...v4.1.0-beta.6) (2023-04-26)
 
 
