@@ -121,7 +121,7 @@ describe('generateEndpoint', () => {
                             method: test.method,
                             path: test.path,
                             parameters: test.restParameters,
-                            parametersHandler: (req, parameters) => ({ req, parameters }),
+                            parametersHandler: (usecase, req, parameters) => ({ usecase, req, parameters }),
                             authorizationHandler: (_) => 'Bob',
                             controller: ({ usecase, request, authorizationInfo }) => {
                                 let result = { usecaseDesc: usecase().description, user: authorizationInfo }
@@ -294,7 +294,7 @@ describe('generateEndpoint', () => {
                 method,
                 path: '/readEntities/:id',
                 parameters: { params: { id1: Number } },
-                parametersHandler: (req, parameters) => ({ req, parameters }),
+                parametersHandler: (usecase, req, parameters) => ({ usecase, req, parameters }),
                 authorizationHandler: (_) => 'Bob',
                 controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
             },
@@ -302,7 +302,7 @@ describe('generateEndpoint', () => {
                 method: 'POST',
                 path: '/readEntitiesTest',
                 parameters: { body: { name: Number } },
-                parametersHandler: (req, parameters) => ({ req, parameters }),
+                parametersHandler: (usecase, req, parameters) => ({ usecase, req, parameters }),
                 authorizationHandler: (_) => 'Jhon',
                 controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
             }]

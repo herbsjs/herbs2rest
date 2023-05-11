@@ -160,7 +160,7 @@ describe('An Herbs2REST App - Integration Test', () => {
                 anUseCase({
                     entity,
                     crud: herbarium.crud.update,
-                    request: { id: Number, name: String, hobbies: [String], customers: [Customer], customer: Customer },
+                    request: { id: Number, name: String, hobbies: [String], customers: [Customer], customer: Customer, noCustomer: Customer, noCustomers: [Customer] },
                     stepReturn: (ctx) => {
                         ctx.ret = {
                             id: ctx.req.id,
@@ -179,7 +179,16 @@ describe('An Herbs2REST App - Integration Test', () => {
 
                 // when - execute
                 const expressController = server.endpoints[0].controller
-                const req = { params: { id: '1' }, body: { id: '1', name: 'Test', hobbies: ['hobby1', 'hobby2'], customers: [{ id: '2', name: 'Test 1', age: '20' }], customer: { id: '3', name: 'Test 2', age: '10' } } }
+                const req = {
+                    params: { id: '1' },
+                    body: {
+                        id: '1', name: 'Test', hobbies: ['hobby1', 'hobby2'],
+                        customers: [{ id: '2', name: 'Test 1', age: '20' }, { id: '4', name: 'Test 4', age: '40' }],
+                        customer: { id: '3', name: 'Test 2', age: '10' },
+                        noCustomer: null,
+                        noCustomers: []
+                    }
+                }
                 const res = aResponse()
                 let nextCalled = false
                 const next = () => { nextCalled = true }
@@ -190,7 +199,7 @@ describe('An Herbs2REST App - Integration Test', () => {
                     id: 1,
                     name: 'Test',
                     hobbies: ['hobby1', 'hobby2'],
-                    customers: [{ id: '2', name: 'Test 1', age: '20' }],
+                    customers: [{ id: '2', name: 'Test 1', age: '20' }, { id: '4', name: 'Test 4', age: '40' }],
                     customer: { id: '3', name: 'Test 2', age: '10' }
                 }))
                 assert.deepStrictEqual(res._status, 200)

@@ -14,7 +14,7 @@ const defaultConvention = {
     expressController: ({ usecase, parameters, parametersHandler, authorizationHandler, controller, method, path }) => {
         return async (req, res, next) => {
             const authorizationInfo = await authorizationHandler(req)
-            const request = await parametersHandler(req, parameters)
+            const request = await parametersHandler(usecase, req, parameters)
             return await controller({ usecase, request, authorizationInfo, res, next, method, path })
         }
     }

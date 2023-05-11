@@ -8,11 +8,12 @@ const defaultConvention = {
 
     /**
      * Extract parameters from request using the corresponding source and cast them to the corresponding type
+     * @param {Function} usecase - Use case to be called by the controller
      * @param {Request} req - Express request
      * @param {Object} parameters - Parameters to be extracted from request in the form { source: { name: type } }. Sources can be: query, params, body, headers, cookies, etc.
      * @returns {Object} - Object with parameters extracted from request in the form { name: value }
      */
-    parametersHandler(req, parameters) {
+    parametersHandler(usecase, req, parameters) {
         const result = {}
         for (let source in parameters) {
             for (const param in parameters[source]) {
@@ -20,6 +21,11 @@ const defaultConvention = {
                 const value = req[source][param]
                 result[param] = defaultConvention.parametersCast(value, type)
             }
+        }
+        // convert all parameters to the same type as the use case request schema
+        const uc = usecase()
+        for (const param in result) {
+            result[param] = defaultConvention.parametersCast(result[param], uc.requestSchema[param])
         }
         return result
     },
@@ -32,7 +38,7 @@ const defaultConvention = {
      */
     parametersCast(value, type) {
         if (Array.isArray(type)) return value?.map(item => defaultConvention.parametersCast(item, type[0]))
-        if (entity.isEntity(type)) return Object.assign(new type(), value)
+        if (entity.isEntity(type) && value) return type.fromJSON(value)
         return tryParse(value, type)
     },
 
@@ -141,7 +147,7 @@ const defaultConvention = {
      * requestToParameters({ method: 'GET', entity: User, request: { id: Number, name: String } })
      * // { params: { id: Number }, query: { name: String } }
      */
-    requestToParameters({ method, entity, request }) {
+    requestToParameters({ method, entityWithIDs, request }) {
         // the entity here is just to find which param is a ID, since this metadata is not in the request
 
         //source based on the method
@@ -152,23 +158,38 @@ const defaultConvention = {
             DELETE: { IDs: 'params' }
         }
 
+        const requestToParameters = Object.fromEntries(Object.entries(request).map(([key, type]) => {
+            function fromEntity(type) {
+                if (!entity.isEntity(type)) return [key, type]
+                // only the ID fields are extracted from the entity
+                const entityIDs = type.schema.fields
+                    .filter(field => field.options.isId)
+                    .map(field => [field.name, field.type])
+                return [key, Object.fromEntries(entityIDs)]
+            }
+            if (Array.isArray(type)) {
+                const typedArray = fromEntity(type[0])
+                return [key, [typedArray[1]]]
+            }
+            return fromEntity(type)
+        }))
+
         //find all the IDs fields in the entity
-        const entityIDs = entity ? Object.entries(entity.prototype.meta.schema).filter(([_, value]) => value?.options.isId).map(([key, _]) => key) : []
+        const entityIDs = entityWithIDs ? Object.entries(entityWithIDs.prototype.meta.schema).filter(([_, value]) => value?.options.isId).map(([key, _]) => key) : []
 
         //find all the IDs and not IDs fields in the params
-        const parametersIDs = Object.entries(request).filter(([key, _]) => entityIDs.includes(key)).map(([key, _]) => key)
-        const parametersNotIDs = Object.entries(request).filter(([key, _]) => !entityIDs.includes(key)).map(([key, _]) => key)
+        const parametersIDs = Object.entries(requestToParameters).filter(([key, _]) => entityIDs.includes(key)).map(([key, _]) => key)
+        const parametersNotIDs = Object.entries(requestToParameters).filter(([key, _]) => !entityIDs.includes(key)).map(([key, _]) => key)
 
         //result is a object with the params in the right source ({ [source]: { [paramName]: [paramType] } })
-        //if the methods is not in the sourcesConvetions, the source will be 'body'
         const result = {}
         if (parametersIDs.length) {
             const source = sourcesConvetions[method]?.IDs || 'body'
-            result[source] = Object.fromEntries(parametersIDs.map(id => [id, request[id]]))
+            result[source] = Object.fromEntries(parametersIDs.map(id => [id, requestToParameters[id]]))
         }
         if (parametersNotIDs.length) {
             const source = sourcesConvetions[method]?.payload || 'body'
-            result[source] = Object.fromEntries(parametersNotIDs.map(id => [id, request[id]]))
+            result[source] = Object.fromEntries(parametersNotIDs.map(id => [id, requestToParameters[id]]))
         }
         return result
     }
@@ -217,7 +238,7 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
             const resource = metadata?.resource || convention.toResourceName({ entity, group, operation })
             if (!resource) throw new Error(`Invalid Resource. It is not possible to generate a REST resource name for usecase ${ucName}. Please, add a group or entity to the usecase metadata.`)
 
-            const parameters = metadata?.parameters || convention.requestToParameters({ method, entity, request: ucRequest, group, operation })
+            const parameters = metadata?.parameters || convention.requestToParameters({ method, entityWithIDs: entity, request: ucRequest, group, operation })
             const parametersHandler = metadata?.parametersHandler || convention.parametersHandler
 
             const path = metadata?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity, group })

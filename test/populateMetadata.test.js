@@ -171,7 +171,7 @@ describe('populateMetadata', () => {
                     // given
                     herbarium.reset()
                     const { entity } = anEntity({ name: entityName })
-                    anUseCase({ crud: operation, entity })
+                    const { anUC } = anUseCase({ crud: operation, entity })
 
                     // when
                     populateMetadata({ herbarium })
@@ -185,7 +185,7 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.path, path)
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, parameters)
-                    assert.deepEqual(metadata.parametersHandler(req, parameters), resultReq)
+                    assert.deepEqual(metadata.parametersHandler(anUC, req, parameters), resultReq)
                     assert.equal(metadata.authorizationHandler({ authInfo: 'bob' }), 'bob')
                 })
             })
@@ -220,7 +220,7 @@ describe('populateMetadata', () => {
                     // given
                     herbarium.reset()
                     const { entity } = anEntity({ name: entityName })
-                    anUseCase({ crud: operation, entity })
+                    const { anUC } = anUseCase({ crud: operation, entity })
 
                     // when
                     populateMetadata({ herbarium })
@@ -235,7 +235,7 @@ describe('populateMetadata', () => {
                     assert.equal(metadata.path, path)
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, parameters)
-                    assert.deepEqual(metadata.parametersHandler(req, parameters), resultReq)
+                    assert.deepEqual(metadata.parametersHandler(anUC, req, parameters), resultReq)
                     assert.equal(metadata.authorizationHandler({ authInfo: 'bob' }), 'bob')
                 })
             })
@@ -459,16 +459,28 @@ describe('populateMetadata', () => {
                             name: field(String)
                         }
                     })
-                    const { entity2 } = anEntity({
-                        name: `${operation} Entity`, fields: {
+                    const { entity: Customer } = anEntity({
+                        name: `Customer`, fields: {
                             id: id(Number),
-                            description: field(String)
+                            description: field(String),
+                            age: field(Number)
                         }
                     })
+                    const { entity: Order } = anEntity({
+                        name: `Order`, fields: {
+                            id1: id(Number),
+                            id2: id(Number),
+                            amount: field(Number),
+                        }
+                    })
+
                     const request = {
                         id: Number,
                         name: String,
-                        entity: entity2
+                        customer: Customer,
+                        customers: [Customer],
+                        order: Order,
+                        orders: [Order]
                     }
                     anUseCase({ crud: operation, entity, request })
 
@@ -478,7 +490,15 @@ describe('populateMetadata', () => {
                     // then
                     const usecaseName = `${operation}Usecase`
                     const [metadata] = herbarium.usecases.get(usecaseName).REST
-                    assert.deepEqual(metadata.parameters, { params: { id: Number }, query: { name: String, entity: entity2 } })
+                    assert.deepEqual(metadata.parameters, {
+                        params: { id: Number }, query: {
+                            name: String,
+                            customer: { id: Number },
+                            customers: [{ id: Number }],
+                            order: { id1: Number, id2: Number },
+                            orders: [{ id1: Number, id2: Number }]
+                        }
+                    })
                     assert.equal(metadata.path, '/readEntities/:id')
                 })
 
