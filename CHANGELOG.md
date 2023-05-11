@@ -1,3 +1,10 @@
+# [4.1.0-beta.8](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.7...v4.1.0-beta.8) (2023-05-11)
+
+
+### Bug Fixes
+
+* **params:** fix uc request to params - Entities and [Entities] ([0a20e33](https://github.com/herbsjs/herbs2rest/commit/0a20e339140a285884dc824f04f0618a192a1fa5))
+
 # [4.1.0-beta.7](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.6...v4.1.0-beta.7) (2023-04-28)
 
 
