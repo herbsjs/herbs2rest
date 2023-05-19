@@ -175,7 +175,11 @@ const defaultConvention = {
         }))
 
         //find all the IDs fields in the entity
-        const entityIDs = entityWithIDs ? Object.entries(entityWithIDs.prototype.meta.schema).filter(([_, value]) => value?.options.isId).map(([key, _]) => key) : []
+        const entityIDs = entityWithIDs ?
+            Object.entries(entityWithIDs.prototype.meta.schema)
+                .filter(([_, value]) => typeof value !== 'function') // ignore methods
+                .filter(([_, value]) => value?.options.isId) // only the ID fields
+                .map(([key, _]) => key) : []
 
         //find all the IDs and not IDs fields in the params
         const parametersIDs = Object.entries(requestToParameters).filter(([key, _]) => entityIDs.includes(key)).map(([key, _]) => key)

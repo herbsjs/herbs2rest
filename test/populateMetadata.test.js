@@ -7,7 +7,7 @@ const assert = require('assert').strict
 describe('populateMetadata', () => {
 
     const anEntity = ({ name, fields }) => {
-        const defaultFields = { id: id(Number), name: field(String) }
+        const defaultFields = { id: id(Number), name: field(String), aFunction() { } }
         fields = fields || defaultFields
         const anEntity = entity(`${name}`, fields)
         herbarium.entities.add(anEntity, 'Test')
@@ -503,7 +503,6 @@ describe('populateMetadata', () => {
                 })
 
             })
-
             describe('Version', () => {
                 it('with versioning', () => {
                     // given
