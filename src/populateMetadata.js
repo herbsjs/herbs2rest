@@ -163,7 +163,8 @@ const defaultConvention = {
                 if (!entity.isEntity(type)) return [key, type]
                 // only the ID fields are extracted from the entity
                 const entityIDs = type.schema.fields
-                    .filter(field => field.options.isId)
+                    .filter(field => typeof field !== 'function') // ignore methods
+                    .filter(field => field.options.isId) // only the ID fields
                     .map(field => [field.name, field.type])
                 return [key, Object.fromEntries(entityIDs)]
             }

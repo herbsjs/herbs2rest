@@ -389,7 +389,8 @@ describe('populateMetadata', () => {
                             isAdult: field(Boolean),
                             birthDate: field(Date),
                             address: field(Object),
-                            hobbies: field(Array)
+                            hobbies: field(Array),
+                            aFunction() { }
                         }
                     })
                     const request = {
@@ -425,7 +426,8 @@ describe('populateMetadata', () => {
                             isAdult: field([Boolean]),
                             birthDate: field([Date]),
                             address: field([Object]),
-                            hobbies: field([Array])
+                            hobbies: field([Array]),
+                            aFunction() { }
                         }
                     })
                     const request = {
@@ -456,14 +458,16 @@ describe('populateMetadata', () => {
                     const { entity } = anEntity({
                         name: `${operation} Entity`, fields: {
                             id: id(Number),
-                            name: field(String)
+                            name: field(String),
+                            aFunction() { }
                         }
                     })
                     const { entity: Customer } = anEntity({
                         name: `Customer`, fields: {
                             id: id(Number),
                             description: field(String),
-                            age: field(Number)
+                            age: field(Number),
+                            aFunction() { }
                         }
                     })
                     const { entity: Order } = anEntity({
@@ -471,6 +475,7 @@ describe('populateMetadata', () => {
                             id1: id(Number),
                             id2: id(Number),
                             amount: field(Number),
+                            aFunction() { }
                         }
                     })
 
