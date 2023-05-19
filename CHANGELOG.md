@@ -1,3 +1,10 @@
+# [4.1.0-beta.9](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.8...v4.1.0-beta.9) (2023-05-19)
+
+
+### Bug Fixes
+
+* **populatemetadata:** fix bug with entities with methods ([f5474d3](https://github.com/herbsjs/herbs2rest/commit/f5474d389bcd48a683c8bcf40698e053d8306b55))
+
 # [4.1.0-beta.8](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.7...v4.1.0-beta.8) (2023-05-11)
 
 
