@@ -87,6 +87,26 @@ describe('populateMetadata', () => {
         })
     })
 
+    describe('should accept a authorizationHandler for all endpoints', () => {
+        it('should return the correct metadata', () => {
+            // given
+            herbarium.reset()
+            const { entity } = anEntity({ name: 'Entity' })
+            anUseCase({ crud: herbarium.crud.read, entity })
+            anUseCase({ crud: herbarium.crud.update, entity })
+            const authorizationHandler = (req) => req.userName
+
+            // when
+            populateMetadata({ herbarium, authorizationHandler })
+
+            // then
+            const [metadata1] = herbarium.usecases.get('ReadUsecase').REST
+            assert.deepStrictEqual(metadata1.authorizationHandler({ userName: 'bob' }), 'bob')
+            const [metadata2] = herbarium.usecases.get('UpdateUsecase').REST
+            assert.deepStrictEqual(metadata2.authorizationHandler({ userName: 'jane' }), 'jane')
+        })
+    })
+
     describe('should accept a alternative convention', () => {
         it('should return the correct metadata respecting the new convention', () => {
             // given
@@ -186,7 +206,7 @@ describe('populateMetadata', () => {
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, parameters)
                     assert.deepEqual(metadata.parametersHandler(anUC, req, parameters), resultReq)
-                    assert.equal(metadata.authorizationHandler({ authInfo: 'bob' }), 'bob')
+                    assert.equal(metadata.authorizationHandler({ user: 'bob' }), 'bob')
                 })
             })
         })
@@ -236,7 +256,7 @@ describe('populateMetadata', () => {
                     assert.equal(typeof metadata.controller, 'function')
                     assert.deepEqual(metadata.parameters, parameters)
                     assert.deepEqual(metadata.parametersHandler(anUC, req, parameters), resultReq)
-                    assert.equal(metadata.authorizationHandler({ authInfo: 'bob' }), 'bob')
+                    assert.equal(metadata.authorizationHandler({ user: 'bob' }), 'bob')
                 })
             })
         })

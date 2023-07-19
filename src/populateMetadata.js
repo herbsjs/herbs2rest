@@ -47,7 +47,7 @@ const defaultConvention = {
      * @param {Request} req - Express request
      * @returns {Object} - Object with authorization info
     */
-    authorizationHandler(req) { return req.authInfo },
+    authorizationHandler(req) { return req.user },
 
     /**
      * Convert CRUD operation to HTTP method
@@ -208,7 +208,7 @@ const defaultConvention = {
  * @param {Object} options.convention - Convention to be used to populate the metadata and generate the endpoints
  * @returns {Herbarium} - Herbarium instance with the REST metadata populated
  */
-function populateMetadata({ herbarium, controller, version = '', convention = defaultConvention }) {
+function populateMetadata({ herbarium, controller, version = '', convention = defaultConvention, authorizationHandler }) {
     if (!herbarium) throw new Error('herbarium is required')
 
     function normalizeHTTPMethod(method) {
@@ -249,9 +249,9 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
             const path = metadata?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity, group })
             const ctlr = metadata?.controller || controller || convention.controller
 
-            const authorizationHandler = metadata?.authorizationHandler || convention.authorizationHandler
+            const authHandler = metadata?.authorizationHandler || authorizationHandler || convention.authorizationHandler
 
-            metadata = Object.assign(metadata, { version: versioning, method, path, resource, parameters, parametersHandler, authorizationHandler, controller: ctlr })
+            metadata = Object.assign(metadata, { version: versioning, method, path, resource, parameters, parametersHandler, authorizationHandler: authHandler, controller: ctlr })
         }
         info.metadata({ REST })
     }
