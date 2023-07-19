@@ -1,3 +1,10 @@
+# [4.1.0-beta.12](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.11...v4.1.0-beta.12) (2023-07-19)
+
+
+### Features
+
+* **populatemetadata:** force endpoint to not be generated ([d719421](https://github.com/herbsjs/herbs2rest/commit/d719421acebdf516151c661716ab4c40ab13ae12))
+
 # [4.1.0-beta.11](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2023-07-19)
 
 
