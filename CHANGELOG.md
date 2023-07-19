@@ -1,3 +1,10 @@
+# [4.1.0-beta.11](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.10...v4.1.0-beta.11) (2023-07-19)
+
+
+### Features
+
+* **authhandler:** now is possible to infor change authhandler for all endpoints at once ([a7e0e9c](https://github.com/herbsjs/herbs2rest/commit/a7e0e9c964a9624f36b4815772ca56fdc51b528a))
+
 # [4.1.0-beta.10](https://github.com/herbsjs/herbs2rest/compare/v4.1.0-beta.9...v4.1.0-beta.10) (2023-05-19)
 
 
