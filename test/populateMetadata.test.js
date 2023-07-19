@@ -40,6 +40,22 @@ describe('populateMetadata', () => {
         return { anUC, herbarium }
     }
 
+    describe('should not populate the endpoint', () => {
+        it('when the use case is not a REST use case', () => {
+            // given
+            herbarium.reset()
+            const { entity } = anEntity({ name: 'Entity' })
+            anUseCase({ crud: herbarium.crud.read, entity })
+            herbarium.usecases.get('ReadUsecase').metadata({ REST: false })
+
+            // when
+            populateMetadata({ herbarium })
+
+            // then
+            assert.equal(herbarium.usecases.get('ReadUsecase').REST, false)
+        })
+    })
+
     describe('must accept a herbarium instance', () => {
         it('should throw an error if herbarium is not provided', () => {
             assert.throws(() =>

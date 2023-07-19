@@ -162,9 +162,23 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then 
-                assert.equal(server.path, undefined)
-                assert.equal(server.method, undefined)
-                assert.equal(server.controller, undefined)
+                assert.equal(server.endpoints.length, 0)
+            })
+
+            it('when the use case has forced not to generate the endpoint', () => {
+                // given
+                herbarium.reset()
+                const method = 'GET'
+                anUseCase({ method })
+                const REST = false
+                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                const server = aServer()
+
+                // when
+                generateEndpoints({ herbarium, server })
+
+                // then 
+                assert.equal(server.endpoints.length, 0)
             })
 
             it('when the use case has an empty REST metadata', () => {
@@ -180,9 +194,7 @@ describe('generateEndpoint', () => {
                 generateEndpoints({ herbarium, server })
 
                 // then 
-                assert.equal(server.path, undefined)
-                assert.equal(server.method, undefined)
-                assert.equal(server.controller, undefined)
+                assert.equal(server.endpoints.length, 0)
             })
 
             it('when the use case has no method', () => {
