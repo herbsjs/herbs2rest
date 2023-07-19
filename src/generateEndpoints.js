@@ -5,7 +5,7 @@ const defaultConvention = {
      * @param {Function} options.usecase - Use case to be called by the controller
      * @param {Object} options.parameters - Parameters of the use case. It is used to extract parameters from request
      * @param {Function} options.parametersHandler - Function to extract parameters from request
-     * @param {Function} options.authorizationHandler - Function to extract authorization info from request
+     * @param {Function} options.authorizationHandler - Function to extract authorization info (ex: user) from request
      * @param {Function} options.controller - Function to handle the response
      * @param {String} options.method - HTTP method
      * @param {String} options.path - Path of the endpoint
