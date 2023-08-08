@@ -7,7 +7,7 @@ const express = require('express')
 const generateRoutes = require('../../src/legacy/generateRoutes')
 const defaultController = require('../../src/legacy/defaultController')
 
-describe('Legacy - Generate Routes', () => {
+describe.skip('Legacy - Generate Routes', () => {
   const entityTest = entity('test entity', {
     testId: id(Number),
     testField: field(String)

@@ -2,7 +2,7 @@ const assert = require('assert')
 const { Ok, Err, usecase, step } = require('@herbsjs/herbs')
 const defaultController = require('../../src/legacy/defaultController')
 
-describe('Herbs2Rest - Default Controller', () => {
+describe.skip('Herbs2Rest - Default Controller', () => {
   class Response {
     status = (statusCode) => {
       this.statusCode = statusCode

@@ -13,7 +13,7 @@ describe('generateEndpoint', () => {
             'A Step': step(_ => Ok())
         })
 
-        herbarium.usecases.add(anUC, `${method}Usecase`)
+        herbarium.nodes.add(`${method}Usecase`, anUC, herbarium.node.usecase)
 
         return { anUC, herbarium }
     }
@@ -132,7 +132,7 @@ describe('generateEndpoint', () => {
                             },
                         },
                     ]
-                    herbarium.usecases.get(`${test.method}Usecase`).metadata({ REST })
+                    herbarium.nodes.get(`${test.method}Usecase`).metadata({ REST })
                     const server = aServer()
 
                     // when
@@ -171,7 +171,7 @@ describe('generateEndpoint', () => {
                 const method = 'GET'
                 anUseCase({ method })
                 const REST = false
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -187,7 +187,7 @@ describe('generateEndpoint', () => {
                 const method = 'GET'
                 anUseCase({ method })
                 const REST = [{}]
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -209,7 +209,7 @@ describe('generateEndpoint', () => {
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ }) => { }
                 }]
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -228,7 +228,7 @@ describe('generateEndpoint', () => {
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ }) => { }
                 }]
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -247,7 +247,7 @@ describe('generateEndpoint', () => {
                     authorizationHandler: (_) => 'Bob',
                     controller: ({ }) => { }
                 }]
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -267,7 +267,7 @@ describe('generateEndpoint', () => {
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     controller: () => { }
                 }]
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -286,7 +286,7 @@ describe('generateEndpoint', () => {
                     parametersHandler: (req, parameters) => ({ req, parameters }),
                     authorizationHandler: (_) => 'Bob',
                 }]
-                herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+                herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
                 const server = aServer()
 
                 // when
@@ -318,7 +318,7 @@ describe('generateEndpoint', () => {
                 authorizationHandler: (_) => 'Jhon',
                 controller: ({ usecase, request, authorizationInfo }) => ({ id1: request.req.params.id1, usecaseDesc: usecase().description, user: authorizationInfo })
             }]
-            herbarium.usecases.get(`${method}Usecase`).metadata({ REST })
+            herbarium.nodes.get(`${method}Usecase`).metadata({ REST })
             const server = aServer()
 
             // when
@@ -347,7 +347,7 @@ describe('generateEndpoint', () => {
             anUseCase({ method: 'GET' })
             anUseCase({ method: 'POST' })
             const server = aServer()
-            herbarium.usecases.get(`GETUsecase`).metadata({
+            herbarium.nodes.get(`GETUsecase`).metadata({
                 REST: [{
                     method: 'GET',
                     path: '/samePath',
@@ -357,7 +357,7 @@ describe('generateEndpoint', () => {
                     controller: () => { }
                 }]
             })
-            herbarium.usecases.get(`POSTUsecase`).metadata({
+            herbarium.nodes.get(`POSTUsecase`).metadata({
                 REST: [{
                     method: 'GET',
                     path: '/samePath',

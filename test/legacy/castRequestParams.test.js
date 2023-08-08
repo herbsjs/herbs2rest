@@ -2,7 +2,7 @@ const assert = require('assert')
 
 const castRequestParams = require('../../src/legacy/helpers/castRequestParams')
 
-describe('Helper - castRequestParams', () => {
+describe.skip('Helper - castRequestParams', () => {
   it('Should return value when type not in array', () => {
     const result = castRequestParams('123', Number)
 

@@ -11,7 +11,7 @@ const anEntity = ({ name = 'An Entity', fields }) => {
     const defaultFields = { id: id(Number), name: field(String) }
     fields = fields || defaultFields
     const anEntity = entity(`${name}`, fields)
-    herbarium.entities.add(anEntity, 'Test')
+    herbarium.nodes.add(`${name}`, anEntity, herbarium.node.entity)
     return { entity: anEntity }
 }
 
@@ -34,9 +34,10 @@ const anUseCase = ({ crud = herbarium.crud.read, entity, group = 'An Group', req
         'A Step': step(ctx => stepReturn(ctx))
     })
 
-    herbarium.usecases
-        .add(anUC, `${crud}Usecase`)
-        .metadata({ group, operation: crud, entity })
+    herbarium.nodes
+        .add(`${crud}Usecase`, anUC, herbarium.node.usecase)
+        .link(`${entity.name}`)
+        .metadata({ operation: crud })
 
     return { anUC, herbarium }
 }
@@ -155,7 +156,7 @@ describe('An Herbs2REST App - Integration Test', () => {
                 // given
                 herbarium.reset()
                 const { entity: Customer } = anEntity({ name: 'TestEntity', fields: { id: id(Number), name: field(String), age: field(Number) } })
-                const { entity } = anEntity({ name: 'TestEntity', fields: { id: id(Number), name: field(String), hobbies: field([String]), customers: field([Customer]), customer: field(Customer) } })
+                const { entity } = anEntity({ name: 'TestEntity2', fields: { id: id(Number), name: field(String), hobbies: field([String]), customers: field([Customer]), customer: field(Customer) } })
 
                 anUseCase({
                     entity,
@@ -245,7 +246,7 @@ describe('An Herbs2REST App - Integration Test', () => {
                 anUseCase({ entity, crud: herbarium.crud.update, request: { id: Number, name: String, age: Number }, stepReturn: (ctx) => { ctx.ret = { processed: true } } })
                 const server = aServer()
 
-                herbarium.usecases.get('UpdateUsecase').metadata({ REST: [{ version: 'v3' }] })
+                herbarium.nodes.get('UpdateUsecase').metadata({ REST: [{ version: 'v3' }] })
 
                 // when - setup 
                 populateMetadata({ herbarium, version: 'v1' })

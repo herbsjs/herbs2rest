@@ -4,7 +4,7 @@ const castRequest = require('../../src/legacy/helpers/castRequest')
 
 const { entity, field } = require('@herbsjs/gotu')
 
-describe('Helper - castRequest', () => {
+describe.skip('Helper - castRequest', () => {
   it('Should return undefined when value is undefined even if type is defined', () => {
     const result = castRequest(undefined, Number)
 

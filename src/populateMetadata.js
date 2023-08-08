@@ -67,16 +67,14 @@ const defaultConvention = {
     },
 
     /**
-     * Apply convention to convert entity name or group name to resource name
+     * Apply convention to convert entity name to resource name
      * @param {Object} options
      * @param {Object} options.entity - Entity class
-     * @param {String} options.group - Group name
      * @returns {String} - Resource name
      */
-    toResourceName({ entity, group }) {
+    toResourceName({ entity }) {
         const entityName = entity?.name
-        const groupName = group
-        let resourceName = entityName || groupName
+        let resourceName = entityName 
         if (!resourceName) return
         resourceName = this.toPlural(resourceName)
         resourceName = this.toResourceNameCase(resourceName)
@@ -218,20 +216,26 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
         return
     }
 
-    for (let uc of herbarium.usecases.all) {
-        const [ucName, info] = uc
-        const operation = info.operation || herbarium.crud.other
-        const entity = info.entity
-        const group = info.group
-        const ucRequest = { ...info.usecase().requestSchema }
+    for (let uc of herbarium.nodes.find({ type: herbarium.node.usecase })) {
+        const ucID = uc.id
+        const metadatas = uc.metadatas
 
         // ignore if REST is false
-        if (info?.REST === false) continue
+        if (metadatas?.REST === false) continue
+
+        const operation = metadatas.operation || herbarium.crud.other
+        
+        let entity
+        const entities = uc.linkedTo({ type: herbarium.node.entity })
+        if (entities.length > 1) throw new Error(`Invalid Use Case. The use case ${ucID} is linked to more than one entity.`)
+        if (entities.length) entity = entities[0].value
+
+        const ucRequest = { ...uc.value().requestSchema }
 
         // throw if REST is defined and is not an array
-        if (info?.REST && !Array.isArray(info.REST)) throw new Error(`Invalid REST metadata. The REST metadata for usecase ${ucName} is not an array.`)
+        if (metadatas?.REST && !Array.isArray(metadatas.REST)) throw new Error(`Invalid REST metadata. The REST metadata for usecase ${ucID} is not an array.`)
 
-        const REST = info?.REST || []
+        const REST = metadatas?.REST || []
 
         // if the REST array has no elements with the version passed, add a entry with the version
         // avoid when REST is false
@@ -241,23 +245,23 @@ function populateMetadata({ herbarium, controller, version = '', convention = de
 
             const versioning = metadata?.version || version
 
-            const method = normalizeHTTPMethod(metadata?.method || convention.operationToMethod({ operation, entity, group }))
-            if (!method) throw new Error(`Invalid Method. It is not possible to populate the REST metadata for usecase ${ucName}. Please, check the method on the usecase metadata.`)
+            const method = normalizeHTTPMethod(metadata?.method || convention.operationToMethod({ operation, entity }))
+            if (!method) throw new Error(`Invalid Method. It is not possible to populate the REST metadata for usecase ${ucID}. Please, check the method on the usecase metadata.`)
 
-            const resource = metadata?.resource || convention.toResourceName({ entity, group, operation })
-            if (!resource) throw new Error(`Invalid Resource. It is not possible to generate a REST resource name for usecase ${ucName}. Please, add a group or entity to the usecase metadata.`)
+            const resource = metadata?.resource || convention.toResourceName({ entity, operation })
+            if (!resource && operation !== herbarium.crud.other) throw new Error(`Invalid Resource. It is not possible to generate a REST resource name for usecase ${ucID}. Please, check the linked entity or the operation on the usecase metadata.`)
 
-            const parameters = metadata?.parameters || convention.requestToParameters({ method, entityWithIDs: entity, request: ucRequest, group, operation })
+            const parameters = metadata?.parameters || convention.requestToParameters({ method, entityWithIDs: entity, request: ucRequest, operation })
             const parametersHandler = metadata?.parametersHandler || convention.parametersHandler
 
-            const path = metadata?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity, group })
+            const path = metadata?.path || convention.methodToPath({ version: versioning, method, operation, resource, parameters, entity })
             const ctlr = metadata?.controller || controller || convention.controller
 
             const authHandler = metadata?.authorizationHandler || authorizationHandler || convention.authorizationHandler
 
             metadata = Object.assign(metadata, { version: versioning, method, path, resource, parameters, parametersHandler, authorizationHandler: authHandler, controller: ctlr })
         }
-        info.metadata({ REST })
+        uc.metadata({ REST })
     }
 
 }

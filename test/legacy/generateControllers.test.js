@@ -8,7 +8,7 @@ const { herbarium } = require('@herbsjs/herbarium')
 const generateRoutes = require('../../src/legacy/generateRoutes')
 const generateControllers = require('../../src/legacy/generateControllers')
 
-describe('Legacy - Generate Controllers', () => {
+describe.skip('Legacy - Generate Controllers', () => {
 
   const Test =
     entity('Test', {

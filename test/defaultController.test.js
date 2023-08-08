@@ -2,7 +2,6 @@ const assert = require('assert')
 const { Ok, Err, usecase, step } = require('@herbsjs/herbs')
 const defaultController = require('../src/defaultController')
 
-
 describe('Default Controller', () => {
 
     function aResponse() {

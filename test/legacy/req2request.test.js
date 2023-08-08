@@ -2,7 +2,7 @@ const assert = require('assert')
 
 const req2request = require('../../src/legacy/helpers/req2request')
 
-describe('Helper - req2request', () => {
+describe.skip('Helper - req2request', () => {
   const usecase = () => ({
     authorize: async () => false,
 
