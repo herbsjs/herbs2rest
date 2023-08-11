@@ -5,6 +5,7 @@
   "main": "src/herbs2rest.js",
   "scripts": {
     "test": "mocha --timeout 999999 --colors --recursive ./test",
+    "test:watch": "mocha --timeout 999999 --colors --recursive ./test --watch",
     "coverage": "npx nyc --reporter=lcov --reporter=text-summary mocha test/*.test.js",
     "lint": "npx eslint \"**/*.{js,jsx}\" --quiet",
     "lint:fix": "npx eslint \"**/*.{js,jsx}\" --fix",

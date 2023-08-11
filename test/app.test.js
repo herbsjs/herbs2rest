@@ -3,8 +3,8 @@
 
 const { herbarium } = require('@herbsjs/herbarium')
 const { usecase, step, Ok, Err, id, field, entity } = require('@herbsjs/herbs')
-const { generateEndpoints } = require('../src/generateEndpoints')
-const { populateMetadata } = require('../src/populateMetadata')
+const { endpoints } = require('../src/endpoints')
+const { routes } = require('../src/routes')
 const assert = require('assert').strict
 
 const anEntity = ({ name = 'An Entity', fields }) => {
@@ -78,8 +78,12 @@ describe('An Herbs2REST App - Integration Test', () => {
                 const server = aServer()
 
                 // when - setup
-                populateMetadata({ herbarium })
-                generateEndpoints({ herbarium, server })
+                endpoints({ herbarium }, {
+                    'v1': (endpoints) => {
+                        endpoints.build()
+                    }
+                })
+                routes({ herbarium, server }).attach()
 
                 // when - execute
                 const expressController = server.endpoints[0].controller
@@ -104,8 +108,13 @@ describe('An Herbs2REST App - Integration Test', () => {
                 const server = aServer()
 
                 // when - setup
-                populateMetadata({ herbarium })
-                generateEndpoints({ herbarium, server })
+                // when - setup
+                endpoints({ herbarium }, {
+                    'v1': (endpoints) => {
+                        endpoints.build()
+                    }
+                })
+                routes({ herbarium, server }).attach()
 
                 // when - execute
                 const expressController = server.endpoints[0].controller
@@ -130,8 +139,13 @@ describe('An Herbs2REST App - Integration Test', () => {
                 const server = aServer()
 
                 // when - setup
-                populateMetadata({ herbarium })
-                generateEndpoints({ herbarium, server })
+                // when - setup
+                endpoints({ herbarium }, {
+                    'v1': (endpoints) => {
+                        endpoints.build()
+                    }
+                })
+                routes({ herbarium, server }).attach()
 
                 // when - execute
                 const expressController = server.endpoints[0].controller
@@ -175,8 +189,12 @@ describe('An Herbs2REST App - Integration Test', () => {
                 const server = aServer()
 
                 // when - setup
-                populateMetadata({ herbarium })
-                generateEndpoints({ herbarium, server })
+                endpoints({ herbarium }, {
+                    'v1': (endpoints) => {
+                        endpoints.build()
+                    }
+                })
+                routes({ herbarium, server }).attach()
 
                 // when - execute
                 const expressController = server.endpoints[0].controller
@@ -220,8 +238,12 @@ describe('An Herbs2REST App - Integration Test', () => {
                 const server = aServer()
 
                 // when - setup
-                populateMetadata({ herbarium })
-                generateEndpoints({ herbarium, server })
+                endpoints({ herbarium }, {
+                    'v1': (endpoints) => {
+                        endpoints.build()
+                    }
+                })
+                routes({ herbarium, server }).attach()
 
                 // when - execute
                 const expressController = server.endpoints[0].controller
@@ -246,14 +268,19 @@ describe('An Herbs2REST App - Integration Test', () => {
                 anUseCase({ entity, crud: herbarium.crud.update, request: { id: Number, name: String, age: Number }, stepReturn: (ctx) => { ctx.ret = { processed: true } } })
                 const server = aServer()
 
-                herbarium.nodes.get('UpdateUsecase').metadata({ REST: [{ version: 'v3' }] })
-
-                // when - setup 
-                populateMetadata({ herbarium, version: 'v1' })
-                populateMetadata({ herbarium, version: 'v2' })
-                generateEndpoints({ herbarium, server })
+                // when - setup
+                endpoints({ herbarium }, {
+                    'v1': (endpoints) => {
+                        endpoints.build()
+                    },
+                    'v3': (endpoints) => {
+                        endpoints.build()
+                    }
+                })
+                routes({ herbarium, server }).attach()
 
                 // when - execute for each version
+                assert.deepStrictEqual(server.endpoints.length, 2)
                 for (const endpoint of server.endpoints) {
                     const expressController = endpoint.controller
 
